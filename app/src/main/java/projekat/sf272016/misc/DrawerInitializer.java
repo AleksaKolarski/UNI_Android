@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -38,6 +39,23 @@ public class DrawerInitializer {
         DrawerListAdapter adapter = new DrawerListAdapter(activity, drawerListItems);
         drawerListView.setOnItemClickListener(new DrawerItemClickListener());
         drawerListView.setAdapter(adapter);
+
+
+        Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
+        activity.setSupportActionBar(toolbar);
+        final android.support.v7.app.ActionBar actionBar = activity.getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_notifications_black_24dp);
+            actionBar.setHomeButtonEnabled(true);
+        }
+        drawerToggle = new ActionBarDrawerToggle(
+                activity,                  /* host Activity */
+                drawerLayout,         /* DrawerLayout object */
+                toolbar,  /* nav drawer image to replace 'Up' caret */
+                R.string.drawer_open,  /* "open drawer" description for accessibility */
+                R.string.drawer_close  /* "close drawer" description for accessibility */
+        );
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
