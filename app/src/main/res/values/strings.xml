@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">SF272016</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+    <string name="preferenceSortPost">Post sorting</string>
+    <string name="preferenceSortComment">Comment sorting</string>
+</resources>
