@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import projekat.sf272016.R;
-import projekat.sf272016.misc.DrawerInitializer;
+import projekat.sf272016.misc.DTInitializer;
 import projekat.sf272016.model.misc.DrawerListItem;
 
 public class CreatePostActivity extends AppCompatActivity {
@@ -20,7 +20,7 @@ public class CreatePostActivity extends AppCompatActivity {
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        new DrawerInitializer(this, new ArrayList<>(Arrays.asList(
+        new DTInitializer(this, new ArrayList<>(Arrays.asList(
                 new DrawerListItem("Posts", "See all posts", R.drawable.ic_launcher_foreground, PostsActivity.class),
                 new DrawerListItem("Settings", "Change app settings", R.drawable.ic_launcher_foreground, SettingsActivity.class)
         ))).initialize();

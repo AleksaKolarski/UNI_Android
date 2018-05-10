@@ -17,7 +17,7 @@ import projekat.sf272016.R;
 import projekat.sf272016.adapters.DrawerListAdapter;
 import projekat.sf272016.model.misc.DrawerListItem;
 
-public class DrawerInitializer {
+public class DTInitializer {
 
     AppCompatActivity activity;
 
@@ -27,7 +27,7 @@ public class DrawerInitializer {
     private RelativeLayout drawerPane;
     private ArrayList<DrawerListItem> drawerListItems;
 
-    public DrawerInitializer(AppCompatActivity activity, ArrayList<DrawerListItem> drawerListItems){
+    public DTInitializer(AppCompatActivity activity, ArrayList<DrawerListItem> drawerListItems){
         this.activity = activity;
         this.drawerListItems = drawerListItems;
     }
