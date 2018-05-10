@@ -60,11 +60,9 @@ public class ReadPostActivity extends AppCompatActivity {
             case R.id.toolbar_action_new:
                 Toast.makeText(getApplicationContext(), "new" , Toast.LENGTH_SHORT).show();
                 return true;
-
             case R.id.toolbar_action_sync:
                 Toast.makeText(getApplicationContext(), "sync" , Toast.LENGTH_SHORT).show();
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }

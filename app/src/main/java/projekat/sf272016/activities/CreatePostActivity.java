@@ -51,7 +51,6 @@ public class CreatePostActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // ubacuje dugmice u toolbar
         getMenuInflater().inflate(R.menu.create_post_menu, menu);
         return true;
     }
@@ -62,11 +61,9 @@ public class CreatePostActivity extends AppCompatActivity {
             case R.id.toolbar_action_new:
                 Toast.makeText(getApplicationContext(), "new" , Toast.LENGTH_SHORT).show();
                 return true;
-
             case R.id.toolbar_action_sync:
                 Toast.makeText(getApplicationContext(), "sync" , Toast.LENGTH_SHORT).show();
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }

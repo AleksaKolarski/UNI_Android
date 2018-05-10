@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,16 +61,13 @@ public class PostsActivity extends AppCompatActivity{
             case R.id.toolbar_action_new:
                 Toast.makeText(getApplicationContext(), "new" , Toast.LENGTH_SHORT).show();
                 return true;
-
             case R.id.toolbar_action_sync:
                 Toast.makeText(getApplicationContext(), "sync" , Toast.LENGTH_SHORT).show();
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
 
     public void btnStartCreatePostActivity(View view) {
