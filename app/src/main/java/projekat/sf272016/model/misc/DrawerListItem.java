@@ -4,18 +4,16 @@ public class DrawerListItem {
     private String itemTitle;
     private String itemSubtitle;
     private int itemIcon;
-    private Class<?> cls;
 
 
     public DrawerListItem(){
 
     }
 
-    public DrawerListItem(String itemTitle, String itemSubtitle, int itemIcon, Class<?> cls) {
+    public DrawerListItem(String itemTitle, String itemSubtitle, int itemIcon) {
         this.itemTitle = itemTitle;
         this.itemSubtitle = itemSubtitle;
         this.itemIcon = itemIcon;
-        this.cls = cls;
     }
 
     public String getItemTitle() {
@@ -40,13 +38,5 @@ public class DrawerListItem {
 
     public void setItemIcon(int itemIcon) {
         this.itemIcon = itemIcon;
-    }
-
-    public Class<?> getCls() {
-        return cls;
-    }
-
-    public void setCls(Class<?> cls) {
-        this.cls = cls;
     }
 }
