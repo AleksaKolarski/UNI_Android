@@ -1,22 +1,27 @@
 package projekat.sf272016.activities;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import projekat.sf272016.R;
+import projekat.sf272016.adapters.PostListAdapter;
 import projekat.sf272016.misc.DrawerHelper;
 import projekat.sf272016.misc.IDrawerClickHandler;
 import projekat.sf272016.misc.ToolbarHelper;
+import projekat.sf272016.model.Post;
 import projekat.sf272016.model.misc.DrawerListItem;
 
 public class PostsActivity extends AppCompatActivity{
@@ -39,6 +44,18 @@ public class PostsActivity extends AppCompatActivity{
         /* Toolbar */
         toolbarHelper = new ToolbarHelper(this);
         toolbarHelper.initialize();
+
+        /* Generate posts */
+        ArrayList<Post> posts = new ArrayList<>();
+        Post post1 = new Post();
+        post1.setTitle("Post 1");
+        Post post2 = new Post();
+        post2.setTitle("Post 2");
+        posts.add(post1);
+        posts.add(post2);
+        PostListAdapter postsAdapter = new PostListAdapter(this, posts);
+        ListView postsListView = (ListView) findViewById(R.id.postsListView);
+        postsListView.setAdapter(postsAdapter);
     }
 
     private class DrawerClickHandler implements IDrawerClickHandler {

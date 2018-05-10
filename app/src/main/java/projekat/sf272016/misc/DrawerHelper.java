@@ -43,8 +43,8 @@ public class DrawerHelper {
         ListView drawerListView = (ListView) activity.findViewById(R.id.drawerList);
         drawerPane = (RelativeLayout) activity.findViewById(R.id.drawerPane);
         DrawerListAdapter adapter = new DrawerListAdapter(activity, drawerListItems);
-        drawerListView.setOnItemClickListener(new DrawerItemClickListener());
         drawerListView.setAdapter(adapter);
+        drawerListView.setOnItemClickListener(new DrawerItemClickListener());
 
         /* Profile box init */
         RelativeLayout profileBox = (RelativeLayout) activity.findViewById(R.id.drawerProfileBox);
@@ -54,7 +54,6 @@ public class DrawerHelper {
         /* TEMP */
         ImageView profileImage = (ImageView) activity.findViewById(R.id.drawerProfileImage);
         profileImage.setImageDrawable((Drawable)activity.getResources().getDrawable(R.drawable.ic_notifications_black_24dp));
-
         TextView profileUsername = (TextView) activity.findViewById(R.id.drawerProfileUsername);
         profileUsername.setText("Username1");
     }

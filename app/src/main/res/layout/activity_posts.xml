@@ -40,6 +40,14 @@
                 android:onClick="btnSettingsActivity"
                 android:text="Settings"/>
 
+            <ListView
+                android:id="@+id/postsListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+            </ListView>
+
         </LinearLayout>
         
         <!-- Drawer -->
