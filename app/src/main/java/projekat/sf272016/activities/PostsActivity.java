@@ -1,7 +1,9 @@
 package projekat.sf272016.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,11 +15,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import projekat.sf272016.R;
 import projekat.sf272016.adapters.PostListAdapter;
+import projekat.sf272016.misc.DatePreference;
 import projekat.sf272016.misc.DrawerHelper;
 import projekat.sf272016.misc.IDrawerClickHandler;
 import projekat.sf272016.misc.ToolbarHelper;
@@ -26,8 +34,12 @@ import projekat.sf272016.model.misc.DrawerListItem;
 
 public class PostsActivity extends AppCompatActivity{
 
-    DrawerHelper drawerHelper;
-    ToolbarHelper toolbarHelper;
+    private DrawerHelper drawerHelper;
+    private ToolbarHelper toolbarHelper;
+
+    private SharedPreferences sharedPreferences;
+    private Date preferenceDate;
+    private String preferenceSort;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,21 +59,55 @@ public class PostsActivity extends AppCompatActivity{
 
         /* Generate posts */
         ArrayList<Post> posts = new ArrayList<>();
+
         Post post1 = new Post();
+        post1.setId(0);
         post1.setTitle("Post 1");
+        try {
+            post1.setDate(new SimpleDateFormat("dd-MM-yyyy").parse("3-12-2016"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        post1.setLikes(100);
+
         Post post2 = new Post();
+        post2.setId(1);
         post2.setTitle("Post 2");
+        try {
+            post2.setDate(new SimpleDateFormat("dd-MM-yyyy").parse("3-12-2017"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        post2.setLikes(50);
+
         posts.add(post1);
         posts.add(post2);
+
         PostListAdapter postsAdapter = new PostListAdapter(this, posts);
         ListView postsListView = (ListView) findViewById(R.id.postsListView);
         postsListView.setAdapter(postsAdapter);
+
+        // Settings
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        // Settings
+        consultPreferences();
+        
+    }
+
+    private void consultPreferences(){
+        preferenceDate = DatePreference.getDateFor(PreferenceManager.getDefaultSharedPreferences(this), "keyPreferenceDate").getTime();
+        preferenceSort = sharedPreferences.getString("keyPreferenceSortPost", "Datum");
     }
 
     private class DrawerClickHandler implements IDrawerClickHandler {
         @Override
         public void handleClick(View view, int position){
-            //Toast.makeText(getApplicationContext(), new Integer(position).toString() , Toast.LENGTH_SHORT).show();
             Toast.makeText(getApplicationContext(), ((TextView)((RelativeLayout) view).getChildAt(1)).getText(), Toast.LENGTH_SHORT).show();
         }
     }

@@ -3,6 +3,7 @@ package projekat.sf272016.model;
 import android.graphics.Bitmap;
 import android.location.Location;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +39,10 @@ public class Post {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {

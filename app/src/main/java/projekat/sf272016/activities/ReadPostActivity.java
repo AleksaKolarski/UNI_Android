@@ -39,6 +39,8 @@ public class ReadPostActivity extends AppCompatActivity {
         /* Toolbar */
         toolbarHelper = new ToolbarHelper(this);
         toolbarHelper.initialize();
+
+        Toast.makeText(this, ((Integer)getIntent().getIntExtra("postId", 0)).toString(), Toast.LENGTH_SHORT).show();
     }
 
     private class DrawerClickHandler implements IDrawerClickHandler {
