@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,14 +24,19 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import projekat.sf272016.R;
 import projekat.sf272016.adapters.PostListAdapter;
 import projekat.sf272016.misc.DatePreference;
 import projekat.sf272016.misc.DrawerHelper;
 import projekat.sf272016.misc.IDrawerClickHandler;
 import projekat.sf272016.misc.ToolbarHelper;
+import projekat.sf272016.misc.Util;
 import projekat.sf272016.model.Post;
 import projekat.sf272016.model.misc.DrawerListItem;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PostsActivity extends AppCompatActivity{
 
@@ -97,7 +103,23 @@ public class PostsActivity extends AppCompatActivity{
 
         // Settings
         consultPreferences();
-        
+
+        Call<ResponseBody> call = Util.test.getTest();
+        call.enqueue(new Callback<ResponseBody>(){
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response){
+                try {
+                    ((TextView) findViewById(R.id.testTextView)).setText(response.body().string());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t){
+
+            }
+        });
+        //((TextView)findViewById(R.id.testTextView)).setText(Util.test.getTest().);
     }
 
     private void consultPreferences(){
