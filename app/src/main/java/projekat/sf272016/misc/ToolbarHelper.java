@@ -23,7 +23,7 @@ public class ToolbarHelper {
         final android.support.v7.app.ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_notifications_black_24dp);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
             actionBar.setHomeButtonEnabled(true);
         }
         drawerToggle = new ActionBarDrawerToggle(

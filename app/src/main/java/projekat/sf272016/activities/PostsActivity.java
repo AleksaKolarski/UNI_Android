@@ -54,8 +54,8 @@ public class PostsActivity extends AppCompatActivity{
 
         /* Drawer */
         ArrayList<DrawerListItem> drawerListItems = new ArrayList<>();
-        drawerListItems.add(new DrawerListItem("Settings", "Change app settings", R.drawable.ic_launcher_foreground));
-        drawerListItems.add(new DrawerListItem("Not", "bla", R.drawable.ic_launcher_foreground));
+        drawerListItems.add(new DrawerListItem("Settings", "Change app settings", R.drawable.ic_settings_black_24dp));
+        drawerListItems.add(new DrawerListItem("Logout", "To login with other account", R.drawable.ic_log_out_24dp));
         drawerHelper = new DrawerHelper(this, drawerListItems, new DrawerClickHandler());
         drawerHelper.initialize();
 

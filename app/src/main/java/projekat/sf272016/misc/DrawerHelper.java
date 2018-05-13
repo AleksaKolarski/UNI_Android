@@ -26,7 +26,7 @@ public class DrawerHelper {
     private DrawerLayout drawerLayout;
     private RelativeLayout drawerPane;
 
-    Object clickHandler;
+    private Object clickHandler;
 
     public DrawerHelper(AppCompatActivity activity, ArrayList<DrawerListItem> drawerListItems, Object clickHandler){
         this.activity = activity;
@@ -42,16 +42,9 @@ public class DrawerHelper {
         drawerListView.setAdapter(adapter);
         drawerListView.setOnItemClickListener(new DrawerItemClickListener());
 
-        /* Profile box init */
+        /* Profile box click listener */
         RelativeLayout profileBox = (RelativeLayout) activity.findViewById(R.id.drawerProfileBox);
         profileBox.setOnClickListener(new DrawerProfileBoxClickListener());
-
-
-        /* TEMP */
-        ImageView profileImage = (ImageView) activity.findViewById(R.id.drawerProfileImage);
-        profileImage.setImageDrawable((Drawable)activity.getResources().getDrawable(R.drawable.ic_notifications_black_24dp));
-        TextView profileUsername = (TextView) activity.findViewById(R.id.drawerProfileUsername);
-        profileUsername.setText("Username1");
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
