@@ -100,7 +100,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="10dp"
                 android:onClick="btnProfileChangePasswordConfirm"
-                android:text="Change" />
+                android:text="Change"
+                android:textAllCaps="false" />
 
         </RelativeLayout>
 
