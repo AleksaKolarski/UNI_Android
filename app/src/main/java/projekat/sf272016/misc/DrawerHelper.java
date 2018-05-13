@@ -1,7 +1,6 @@
 package projekat.sf272016.misc;
 
-import android.app.Application;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -11,16 +10,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import java.util.ArrayList;
 
 import projekat.sf272016.R;
+import projekat.sf272016.activities.ProfileActivity;
 import projekat.sf272016.adapters.DrawerListAdapter;
-import projekat.sf272016.model.Comment;
-import projekat.sf272016.model.Post;
-import projekat.sf272016.model.User;
 import projekat.sf272016.model.misc.DrawerListItem;
 
 public class DrawerHelper {
@@ -69,8 +65,8 @@ public class DrawerHelper {
     private class DrawerProfileBoxClickListener implements  RelativeLayout.OnClickListener{
         @Override
         public void onClick(View v) {
-            //TODO Otvoriti ProfileActivity
-            Toast.makeText(activity.getApplicationContext(), "Profil" , Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(activity, ProfileActivity.class);
+            activity.startActivity(intent);
             drawerLayout.closeDrawer(drawerPane);
         }
     }
