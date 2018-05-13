@@ -1,7 +1,9 @@
 package projekat.sf272016.misc;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -45,6 +47,12 @@ public class DrawerHelper {
         /* Profile box click listener */
         RelativeLayout profileBox = (RelativeLayout) activity.findViewById(R.id.drawerProfileBox);
         profileBox.setOnClickListener(new DrawerProfileBoxClickListener());
+
+        /* Populate profile box */
+        SharedPreferences sharedPreferences;
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        String username = sharedPreferences.getString("loggedInUserUsername", "");
+        ((TextView)activity.findViewById(R.id.drawerProfileUsername)).setText(username);
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {

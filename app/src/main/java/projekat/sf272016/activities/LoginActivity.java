@@ -1,6 +1,8 @@
 package projekat.sf272016.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -34,6 +36,15 @@ public class LoginActivity extends AppCompatActivity {
         result = "success"; // TODO obrisati lol
 
         if(result.equals("success")){
+
+            // Upisivanje podataka o ulogovanom korisniku u SharedPreferences
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+            sharedPreferencesEditor.putString("loggedInUserUsername", username);
+            sharedPreferencesEditor.putInt("loggedInUserId", 0);
+            sharedPreferencesEditor.commit();
+
+            // Pokretanje ReadPostActivity
             Intent intent = new Intent(this, PostsActivity.class);
             startActivity(intent);
             finish();
