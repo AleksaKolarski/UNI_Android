@@ -86,8 +86,19 @@ public class PostsActivity extends AppCompatActivity{
         }
         post2.setLikes(50);
 
+        Post post3 = new Post();
+        post3.setId(3);
+        post3.setTitle("Post 3");
+        try {
+            post3.setDate(new SimpleDateFormat("dd-MM-yyyy").parse("3-12-2018"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        post3.setLikes(10);
+
         posts.add(post1);
         posts.add(post2);
+        posts.add(post3);
 
         PostListAdapter postsAdapter = new PostListAdapter(this, posts);
         ListView postsListView = (ListView) findViewById(R.id.postsListView);
@@ -116,7 +127,7 @@ public class PostsActivity extends AppCompatActivity{
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t){
-
+                ((TextView) findViewById(R.id.testTextView)).setText("Could not load google.com");
             }
         });
         //((TextView)findViewById(R.id.testTextView)).setText(Util.test.getTest().);
