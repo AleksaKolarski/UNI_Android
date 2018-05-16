@@ -27,6 +27,7 @@ import java.util.List;
 import okhttp3.ResponseBody;
 import projekat.sf272016.R;
 import projekat.sf272016.adapters.PostListAdapter;
+import projekat.sf272016.adapters.StateListAdapter;
 import projekat.sf272016.misc.DatePreference;
 import projekat.sf272016.misc.DrawerHelper;
 import projekat.sf272016.misc.IDrawerClickHandler;
@@ -139,19 +140,19 @@ public class PostsActivity extends AppCompatActivity{
 
 
         // Povlacenje JSON-a i deserijalizacija u objekte
-        Call<List<State>> call = Util.test.getTest();
-        call.enqueue(new Callback<List<State>>(){
+        Call<ArrayList<State>> call = Util.test.getTest();
+        call.enqueue(new Callback<ArrayList<State>>(){
             @Override
-            public void onResponse(Call<List<State>> call, Response<List<State>> response){
-                List<State> states = response.body();
-                String statesText = "";
-                for(State state: states){
-                    statesText += state.getStatename() + "\n";
+            public void onResponse(Call<ArrayList<State>> call, Response<ArrayList<State>> response){
+                ArrayList<State> states = response.body();
+                if(states != null) {
+                    StateListAdapter stateListAdapter = new StateListAdapter(PostsActivity.this, states);
+                    ListView postsListView = (ListView) findViewById(R.id.postsListView);
+                    postsListView.setAdapter(stateListAdapter);
                 }
-                ((TextView) findViewById(R.id.testTextView)).setText(statesText);
             }
             @Override
-            public void onFailure(Call<List<State>> call, Throwable t){
+            public void onFailure(Call<ArrayList<State>> call, Throwable t){
 
             }
         });
