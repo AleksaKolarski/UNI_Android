@@ -33,6 +33,7 @@ import projekat.sf272016.misc.IDrawerClickHandler;
 import projekat.sf272016.misc.ToolbarHelper;
 import projekat.sf272016.misc.Util;
 import projekat.sf272016.model.Post;
+import projekat.sf272016.model.State;
 import projekat.sf272016.model.misc.DrawerListItem;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -115,6 +116,9 @@ public class PostsActivity extends AppCompatActivity{
         // Settings
         consultPreferences();
 
+
+        // Ovo je kad ocemo samo tekst da povucemo
+        /*
         Call<ResponseBody> call = Util.test.getTest();
         call.enqueue(new Callback<ResponseBody>(){
             @Override
@@ -131,6 +135,26 @@ public class PostsActivity extends AppCompatActivity{
             }
         });
         //((TextView)findViewById(R.id.testTextView)).setText(Util.test.getTest().);
+        */
+
+
+        // Povlacenje JSON-a i deserijalizacija u objekte
+        Call<List<State>> call = Util.test.getTest();
+        call.enqueue(new Callback<List<State>>(){
+            @Override
+            public void onResponse(Call<List<State>> call, Response<List<State>> response){
+                List<State> states = response.body();
+                String statesText = "";
+                for(State state: states){
+                    statesText += state.getStatename() + "\n";
+                }
+                ((TextView) findViewById(R.id.testTextView)).setText(statesText);
+            }
+            @Override
+            public void onFailure(Call<List<State>> call, Throwable t){
+
+            }
+        });
     }
 
     private void consultPreferences(){
