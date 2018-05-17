@@ -15,23 +15,24 @@ import projekat.sf272016.R;
 import projekat.sf272016.activities.ReadPostActivity;
 import projekat.sf272016.model.Post;
 import projekat.sf272016.model.State;
+import projekat.sf272016.model.User;
 
 public class StateListAdapter extends BaseAdapter {
 
     Context context;
-    ArrayList<State> states;
+    ArrayList<User> users;
 
-    public StateListAdapter(Context context, ArrayList<State> states){
+    public StateListAdapter(Context context, ArrayList<User> users){
         this.context = context;
-        this.states = states;
+        this.users = users;
     }
 
     @Override
-    public int getCount(){ return states.size(); }
+    public int getCount(){ return users.size(); }
 
     @Override
     public Object getItem(int position){
-        return states.get(position);
+        return users.get(position);
     }
 
     @Override
@@ -54,10 +55,10 @@ public class StateListAdapter extends BaseAdapter {
         ImageView iconView = (ImageView) view.findViewById(R.id.activity_posts_post_item_image);
         TextView titleView = (TextView) view.findViewById(R.id.activity_posts_post_item_title);
 
-        titleView.setText(states.get(position).getStatename());
+        titleView.setText(users.get(position).getName());
 
         view.setOnClickListener(new PostsClickListener());
-        view.setTag(states.get(position).getAbbreviation());
+        view.setTag(users.get(position).getUsername());
 
         return view;
     }

@@ -2,29 +2,22 @@ package projekat.sf272016.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 
-import okhttp3.ResponseBody;
 import projekat.sf272016.R;
 import projekat.sf272016.adapters.PostListAdapter;
 import projekat.sf272016.adapters.StateListAdapter;
@@ -32,9 +25,8 @@ import projekat.sf272016.misc.DatePreference;
 import projekat.sf272016.misc.DrawerHelper;
 import projekat.sf272016.misc.IDrawerClickHandler;
 import projekat.sf272016.misc.ToolbarHelper;
-import projekat.sf272016.misc.Util;
 import projekat.sf272016.model.Post;
-import projekat.sf272016.model.State;
+import projekat.sf272016.model.User;
 import projekat.sf272016.model.misc.DrawerListItem;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -140,33 +132,53 @@ public class PostsActivity extends AppCompatActivity{
 
 
         // Povlacenje JSON-a i deserijalizacija u objekte
-        Call<ArrayList<State>> call = Util.test.getTest();
-        call.enqueue(new Callback<ArrayList<State>>(){
+        /*
+        Call<ArrayList<User>> call = Util.test.getAllUsers();
+        call.enqueue(new Callback<ArrayList<User>>(){
             @Override
-            public void onResponse(Call<ArrayList<State>> call, Response<ArrayList<State>> response){
-                ArrayList<State> states = response.body();
-                if(states != null) {
-                    StateListAdapter stateListAdapter = new StateListAdapter(PostsActivity.this, states);
+            public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response){
+                ((TextView) findViewById(R.id.testTextView)).setText(response.code() + " " + response.message());
+                ArrayList<User> users = response.body();
+                if(users != null) {
+                    StateListAdapter stateListAdapter = new StateListAdapter(PostsActivity.this, users);
                     ListView postsListView = (ListView) findViewById(R.id.postsListView);
                     postsListView.setAdapter(stateListAdapter);
                 }
             }
             @Override
-            public void onFailure(Call<ArrayList<State>> call, Throwable t){
-
+            public void onFailure(Call<ArrayList<User>> call, Throwable t){
+                ((TextView) findViewById(R.id.testTextView)).setText(t.getMessage());
             }
         });
+        */
     }
 
     private void consultPreferences(){
-        preferenceDate = DatePreference.getDateFor(PreferenceManager.getDefaultSharedPreferences(this), "keyPreferenceDate").getTime();
+        preferenceDate = DatePreference.getDateFor(sharedPreferences, "keyPreferenceDate").getTime();
         preferenceSort = sharedPreferences.getString("keyPreferenceSortPost", "Datum");
     }
 
     private class DrawerClickHandler implements IDrawerClickHandler {
         @Override
         public void handleClick(View view, int position){
-            Toast.makeText(getApplicationContext(), ((TextView)((RelativeLayout) view).getChildAt(1)).getText(), Toast.LENGTH_SHORT).show();
+            String option = ((TextView)((RelativeLayout) view).getChildAt(position)).getText().toString();
+            switch (option){
+                case "Settings":
+
+                    break;
+                case "Logout":
+
+                    // Brisemo username iz SharedPreferences
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PostsActivity.this);
+                    SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+                    sharedPreferencesEditor.remove("loggedInUserUsername");
+                    sharedPreferencesEditor.commit();
+
+                    Intent intent = new Intent(PostsActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    PostsActivity.this.finish();
+                    break;
+            }
         }
     }
 

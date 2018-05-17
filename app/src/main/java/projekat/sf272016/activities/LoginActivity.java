@@ -10,6 +10,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import projekat.sf272016.R;
+import projekat.sf272016.model.User;
+import projekat.sf272016.remote.LoginRemote;
+import projekat.sf272016.remote.Remote;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -25,33 +31,51 @@ public class LoginActivity extends AppCompatActivity {
         passwordBox = (EditText) findViewById(R.id.loginActivityPassword);
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        // Ako je vec ulogovan
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if(!sharedPreferences.getString("loggedInUserUsername", "").equals("")){
+            Intent intent = new Intent(LoginActivity.this, PostsActivity.class);
+            startActivity(intent);
+            LoginActivity.this.finish();
+        }
+    }
+
     public void btnLogin(View view) {
 
         String username = usernameBox.getText().toString();
         String password = passwordBox.getText().toString();
 
-        // TODO poslati kredencijale na rest servis i na osnovu toga delovati dalje
-        String result; // = tryToLogIn(username, password);
+        Call<User> call = Remote.login.login(username, password);
 
-        result = "success"; // TODO obrisati lol
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User user = response.body();
+                if(user == null){
+                    error("Wrong credentials");
+                    return;
+                }
 
-        if(result.equals("success")){
+                // Upisivanje podataka o ulogovanom korisniku u SharedPreferences
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+                SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+                sharedPreferencesEditor.putString("loggedInUserUsername", user.getUsername());
+                sharedPreferencesEditor.commit();
 
-            // Upisivanje podataka o ulogovanom korisniku u SharedPreferences
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
-            sharedPreferencesEditor.putString("loggedInUserUsername", username);
-            sharedPreferencesEditor.putInt("loggedInUserId", 0);
-            sharedPreferencesEditor.commit();
-
-            // Pokretanje ReadPostActivity
-            Intent intent = new Intent(this, PostsActivity.class);
-            startActivity(intent);
-            finish();
-        }
-        else{
-            error("Wrong credentials");
-        }
+                // Pokretanje ReadPostActivity
+                Intent intent = new Intent(LoginActivity.this, PostsActivity.class);
+                startActivity(intent);
+                LoginActivity.this.finish();
+            }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                error("Something went wrong!");
+            }
+        });
     }
 
     private void error(String message){
