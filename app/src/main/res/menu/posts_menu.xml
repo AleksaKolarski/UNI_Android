@@ -6,8 +6,8 @@
     <!-- "Mark Favorite", should appear as action button if possible -->
     <item
         android:id="@+id/toolbar_action_new"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="notification"
+        android:icon="@drawable/ic_add_black_24dp"
+        android:title="Create new post"
         app:showAsAction="ifRoom"/>
 
     <!-- Settings, should always be in the overflow -->

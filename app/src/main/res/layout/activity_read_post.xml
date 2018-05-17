@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/toolbar" />
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawerLayout"
@@ -18,21 +17,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <!-- Title -->
             <TextView
                 android:id="@+id/readPostTitle"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="Title placeholder" />
-
-            <!-- Description -->
-            <TextView
-                android:id="@+id/readPostDescription"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:text="Description placeholder" />
+                android:layout_height="wrap_content"
+                android:text="Title placeholder"
+                android:textStyle="bold"
+                android:textSize="30sp"/>
 
             <!-- Image -->
             <ImageView
@@ -40,11 +35,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <!-- Description -->
+            <TextView
+                android:id="@+id/readPostDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Description placeholder"
+                android:textSize="18sp" />
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
             <!-- Tags -->
             <TextView
                 android:id="@+id/readPostTags"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:text="Tags placeholder" />
 
             <LinearLayout
@@ -56,24 +65,25 @@
                 <TextView
                     android:id="@+id/readPostAuthor"
                     android:layout_width="wrap_content"
-                    android:layout_height="60dp"
-                    android:layout_marginRight="10dp"
-                    android:text="Author placeholder" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:text="Author placeholder"
+                    android:textStyle="italic"/>
 
                 <!-- Date -->
                 <TextView
                     android:id="@+id/readPostDate"
                     android:layout_width="wrap_content"
-                    android:layout_height="60dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
                     android:text="Date placeholder" />
 
                 <!-- Location -->
                 <TextView
                     android:id="@+id/readPostLocation"
                     android:layout_width="wrap_content"
-                    android:layout_height="60dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
                     android:text="Location placeholder" />
 
             </LinearLayout>
@@ -81,7 +91,7 @@
         </LinearLayout>
 
         <!-- Drawer -->
-        <include layout="@layout/drawer"/>
+        <include layout="@layout/drawer" />
 
     </android.support.v4.widget.DrawerLayout>
 

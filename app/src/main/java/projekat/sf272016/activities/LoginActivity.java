@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import projekat.sf272016.R;
 import projekat.sf272016.model.User;
@@ -49,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         String username = usernameBox.getText().toString();
         String password = passwordBox.getText().toString();
 
-        Call<User> call = Remote.login.login(username, password);
+        Call<User> call = Remote.loginRemote.login(username, password);
 
         call.enqueue(new Callback<User>() {
             @Override
@@ -80,5 +81,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void error(String message){
         ((TextView)findViewById(R.id.loginActivityError)).setText(message);
+    }
+
+    public void btnRegister(View view) {
+        Toast.makeText(this, "Register", Toast.LENGTH_SHORT).show();
     }
 }

@@ -22,28 +22,7 @@
             <TextView
                 android:id="@+id/testTextView"
                 android:layout_width="match_parent"
-                android:layout_height="150dp" />
-
-            <Button
-                android:id="@+id/btnStartCreatePostActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="btnStartCreatePostActivity"
-                android:text="Create"/>
-
-            <Button
-                android:id="@+id/btnReadPostActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="btnReadPostActivity"
-                android:text="Read"/>
-
-            <Button
-                android:id="@+id/btnSettingsActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="btnSettingsActivity"
-                android:text="Settings"/>
+                android:layout_height="wrap_content"/>
 
             <ListView
                 android:id="@+id/postsListView"

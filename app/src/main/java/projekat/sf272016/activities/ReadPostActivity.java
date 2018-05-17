@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,12 +16,18 @@ import projekat.sf272016.R;
 import projekat.sf272016.misc.DrawerHelper;
 import projekat.sf272016.misc.IDrawerClickHandler;
 import projekat.sf272016.misc.ToolbarHelper;
+import projekat.sf272016.model.Post;
 import projekat.sf272016.model.misc.DrawerListItem;
+import projekat.sf272016.remote.Remote;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ReadPostActivity extends AppCompatActivity {
 
     DrawerHelper drawerHelper;
     ToolbarHelper toolbarHelper;
+    Integer postId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +45,34 @@ public class ReadPostActivity extends AppCompatActivity {
         toolbarHelper = new ToolbarHelper(this);
         toolbarHelper.initialize();
 
-        Toast.makeText(this, ((Integer)getIntent().getIntExtra("postId", 0)).toString(), Toast.LENGTH_SHORT).show();
+        // Ucitavanje posta
+        postId = (Integer)getIntent().getIntExtra("postId", 0);
+
+        Call<Post> call = Remote.postRemote.getPostById(postId);
+        call.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                Post post = response.body();
+                if(post != null){
+                    TextView readPostTitle = (TextView) findViewById(R.id.readPostTitle);
+                    TextView readPostDescription = (TextView) findViewById(R.id.readPostDescription);
+                    ImageView readPostImage = (ImageView) findViewById(R.id.readPostImage);
+                    TextView readPostTags = (TextView) findViewById(R.id.readPostTags);
+                    TextView readPostAuthor = (TextView) findViewById(R.id.readPostAuthor);
+                    TextView readPostDate = (TextView) findViewById(R.id.readPostDate);
+                    TextView readPostLocation = (TextView) findViewById(R.id.readPostLocation);
+
+                    readPostTitle.setText(post.getTitle());
+                    readPostDescription.setText(post.getDescription());
+                    readPostAuthor.setText(post.getAuthor().getUsername());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                ((TextView) findViewById(R.id.readPostDescription)).setText(t.getMessage() + "\n" + t.getCause().toString());
+            }
+        });
     }
 
     private class DrawerClickHandler implements IDrawerClickHandler {

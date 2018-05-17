@@ -20,14 +20,13 @@ import java.util.Date;
 
 import projekat.sf272016.R;
 import projekat.sf272016.adapters.PostListAdapter;
-import projekat.sf272016.adapters.StateListAdapter;
 import projekat.sf272016.misc.DatePreference;
 import projekat.sf272016.misc.DrawerHelper;
 import projekat.sf272016.misc.IDrawerClickHandler;
 import projekat.sf272016.misc.ToolbarHelper;
 import projekat.sf272016.model.Post;
-import projekat.sf272016.model.User;
 import projekat.sf272016.model.misc.DrawerListItem;
+import projekat.sf272016.remote.Remote;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,47 +56,6 @@ public class PostsActivity extends AppCompatActivity{
         toolbarHelper = new ToolbarHelper(this);
         toolbarHelper.initialize();
 
-        /* Generate posts */
-        ArrayList<Post> posts = new ArrayList<>();
-
-        Post post1 = new Post();
-        post1.setId(0);
-        post1.setTitle("Post 1");
-        try {
-            post1.setDate(new SimpleDateFormat("dd-MM-yyyy").parse("3-12-2016"));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        post1.setLikes(100);
-
-        Post post2 = new Post();
-        post2.setId(1);
-        post2.setTitle("Post 2");
-        try {
-            post2.setDate(new SimpleDateFormat("dd-MM-yyyy").parse("3-12-2017"));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        post2.setLikes(50);
-
-        Post post3 = new Post();
-        post3.setId(3);
-        post3.setTitle("Post 3");
-        try {
-            post3.setDate(new SimpleDateFormat("dd-MM-yyyy").parse("3-12-2018"));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        post3.setLikes(10);
-
-        posts.add(post1);
-        posts.add(post2);
-        posts.add(post3);
-
-        PostListAdapter postsAdapter = new PostListAdapter(this, posts);
-        ListView postsListView = (ListView) findViewById(R.id.postsListView);
-        postsListView.setAdapter(postsAdapter);
-
         // Settings
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
@@ -109,48 +67,27 @@ public class PostsActivity extends AppCompatActivity{
         // Settings
         consultPreferences();
 
-
-        // Ovo je kad ocemo samo tekst da povucemo
-        /*
-        Call<ResponseBody> call = Util.test.getTest();
-        call.enqueue(new Callback<ResponseBody>(){
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response){
-                try {
-                    ((TextView) findViewById(R.id.testTextView)).setText(response.body().string());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t){
-                ((TextView) findViewById(R.id.testTextView)).setText("Could not load google.com");
-            }
-        });
-        //((TextView)findViewById(R.id.testTextView)).setText(Util.test.getTest().);
-        */
-
-
         // Povlacenje JSON-a i deserijalizacija u objekte
-        /*
-        Call<ArrayList<User>> call = Util.test.getAllUsers();
-        call.enqueue(new Callback<ArrayList<User>>(){
+        Call<ArrayList<Post>> call = Remote.postRemote.getAllPosts();
+        call.enqueue(new Callback<ArrayList<Post>>(){
             @Override
-            public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response){
-                ((TextView) findViewById(R.id.testTextView)).setText(response.code() + " " + response.message());
-                ArrayList<User> users = response.body();
-                if(users != null) {
-                    StateListAdapter stateListAdapter = new StateListAdapter(PostsActivity.this, users);
+            public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response){
+                //((TextView) findViewById(R.id.testTextView)).setText(response.code() + " " + response.message());
+                ArrayList<Post> posts = response.body();
+                if(posts != null) {
+                    PostListAdapter postListAdapter = new PostListAdapter(PostsActivity.this, posts);
                     ListView postsListView = (ListView) findViewById(R.id.postsListView);
-                    postsListView.setAdapter(stateListAdapter);
+                    postsListView.setAdapter(postListAdapter);
+                }
+                else{
+                    ((TextView) findViewById(R.id.testTextView)).setText("lista prazna");
                 }
             }
             @Override
-            public void onFailure(Call<ArrayList<User>> call, Throwable t){
-                ((TextView) findViewById(R.id.testTextView)).setText(t.getMessage());
+            public void onFailure(Call<ArrayList<Post>> call, Throwable t){
+                ((TextView) findViewById(R.id.testTextView)).setText("Error");
             }
         });
-        */
     }
 
     private void consultPreferences(){
@@ -161,10 +98,12 @@ public class PostsActivity extends AppCompatActivity{
     private class DrawerClickHandler implements IDrawerClickHandler {
         @Override
         public void handleClick(View view, int position){
-            String option = ((TextView)((RelativeLayout) view).getChildAt(position)).getText().toString();
+            String option = ((TextView)((RelativeLayout) view).getChildAt(1)).getText().toString();
+            Intent intent;
             switch (option){
                 case "Settings":
-
+                    intent = new Intent(PostsActivity.this, SettingsActivity.class);
+                    startActivity(intent);
                     break;
                 case "Logout":
 
@@ -174,7 +113,7 @@ public class PostsActivity extends AppCompatActivity{
                     sharedPreferencesEditor.remove("loggedInUserUsername");
                     sharedPreferencesEditor.commit();
 
-                    Intent intent = new Intent(PostsActivity.this, LoginActivity.class);
+                    intent = new Intent(PostsActivity.this, LoginActivity.class);
                     startActivity(intent);
                     PostsActivity.this.finish();
                     break;
@@ -192,29 +131,14 @@ public class PostsActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.toolbar_action_new:
-                Toast.makeText(getApplicationContext(), "new" , Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, CreatePostActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.toolbar_action_sync:
-                Toast.makeText(getApplicationContext(), "sync" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "refresh" , Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-
-    public void btnStartCreatePostActivity(View view) {
-        Intent intent = new Intent(this, CreatePostActivity.class);
-        startActivity(intent);
-    }
-
-    public void btnReadPostActivity(View view) {
-        Intent intent = new Intent(this, ReadPostActivity.class);
-        startActivity(intent);
-    }
-
-    public void btnSettingsActivity(View view) {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
     }
 }

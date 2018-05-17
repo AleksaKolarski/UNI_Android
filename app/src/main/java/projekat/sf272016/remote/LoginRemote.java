@@ -8,6 +8,6 @@ import retrofit2.http.Path;
 public interface LoginRemote {
 
     // LOGIN
-    @GET("/OsaProjekat/login/{username}/{password}")
+    @GET(Remote.APP_PATH + "/login/{username}/{password}")
     Call<User> login(@Path("username") String username, @Path("password") String password);
 }

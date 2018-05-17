@@ -1,11 +1,13 @@
 package projekat.sf272016.activities;
 
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,7 +19,13 @@ import projekat.sf272016.R;
 import projekat.sf272016.misc.DrawerHelper;
 import projekat.sf272016.misc.IDrawerClickHandler;
 import projekat.sf272016.misc.ToolbarHelper;
+import projekat.sf272016.model.Post;
+import projekat.sf272016.model.User;
 import projekat.sf272016.model.misc.DrawerListItem;
+import projekat.sf272016.remote.Remote;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CreatePostActivity extends AppCompatActivity {
 
@@ -39,6 +47,33 @@ public class CreatePostActivity extends AppCompatActivity {
         /* Toolbar */
         toolbarHelper = new ToolbarHelper(this);
         toolbarHelper.initialize();
+    }
+
+    public void btnCreate(View view) {
+        // TODO Call remote server and create new post
+        Post post = new Post();
+        post.setTitle(((EditText)findViewById(R.id.createPostActivityTitle)).getText().toString());
+        post.setDescription(((EditText)findViewById(R.id.createPostActivityDescription)).getText().toString());
+        User user = new User();
+        user.setUsername(PreferenceManager.getDefaultSharedPreferences(this).getString("loggedInUserUsername", ""));
+        post.setAuthor(user);
+
+        Call<Post> call = Remote.postRemote.createPost(post);
+        call.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                Toast.makeText(CreatePostActivity.this, ((Integer)response.code()).toString(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                Toast.makeText(CreatePostActivity.this, "Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void btnPhoto(View view) {
+        // TODO Photo chooser
     }
 
     private class DrawerClickHandler implements IDrawerClickHandler {
