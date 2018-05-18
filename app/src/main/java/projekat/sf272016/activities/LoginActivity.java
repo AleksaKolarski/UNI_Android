@@ -27,21 +27,23 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        usernameBox = (EditText) findViewById(R.id.loginActivityUsername);
-        passwordBox = (EditText) findViewById(R.id.loginActivityPassword);
     }
 
     @Override
     protected void onResume(){
         super.onResume();
 
+        if(usernameBox == null)
+            usernameBox = (EditText) findViewById(R.id.loginActivityUsername);
+        if(passwordBox == null)
+            passwordBox = (EditText) findViewById(R.id.loginActivityPassword);
+
         // Ako je vec ulogovan
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if(!sharedPreferences.getString("loggedInUserUsername", "").equals("")){
             Intent intent = new Intent(LoginActivity.this, PostsActivity.class);
             startActivity(intent);
-            LoginActivity.this.finish();
+            finish();
         }
     }
 
@@ -57,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 User user = response.body();
                 if(user == null){
-                    error("Wrong credentials");
+                    Toast.makeText(LoginActivity.this, "Wrong credentials.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -65,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
                 SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
                 sharedPreferencesEditor.putString("loggedInUserUsername", user.getUsername());
+                sharedPreferencesEditor.putString("loggedInUserName", user.getName());
                 sharedPreferencesEditor.commit();
 
                 // Pokretanje ReadPostActivity
@@ -74,16 +77,13 @@ public class LoginActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                error("Something went wrong!");
+                Toast.makeText(LoginActivity.this, "Error.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void error(String message){
-        ((TextView)findViewById(R.id.loginActivityError)).setText(message);
-    }
-
     public void btnRegister(View view) {
-        Toast.makeText(this, "Register", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
     }
 }

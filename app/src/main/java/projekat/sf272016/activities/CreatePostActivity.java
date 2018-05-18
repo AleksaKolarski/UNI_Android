@@ -46,11 +46,10 @@ public class CreatePostActivity extends AppCompatActivity {
 
         /* Toolbar */
         toolbarHelper = new ToolbarHelper(this);
-        toolbarHelper.initialize();
+        toolbarHelper.initialize("Create new post");
     }
 
     public void btnCreate(View view) {
-        // TODO Call remote server and create new post
         Post post = new Post();
         post.setTitle(((EditText)findViewById(R.id.createPostActivityTitle)).getText().toString());
         post.setDescription(((EditText)findViewById(R.id.createPostActivityDescription)).getText().toString());
@@ -79,28 +78,7 @@ public class CreatePostActivity extends AppCompatActivity {
     private class DrawerClickHandler implements IDrawerClickHandler {
         @Override
         public void handleClick(View view, int position){
-            //Toast.makeText(getApplicationContext(), new Integer(position).toString() , Toast.LENGTH_SHORT).show();
-            Toast.makeText(getApplicationContext(), ((TextView)((RelativeLayout) view).getChildAt(1)).getText(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.create_post_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.toolbar_action_new:
-                Toast.makeText(getApplicationContext(), "new" , Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.toolbar_action_sync:
-                Toast.makeText(getApplicationContext(), "sync" , Toast.LENGTH_SHORT).show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            Toast.makeText(getApplicationContext(), ((String)view.getTag()), Toast.LENGTH_SHORT).show();
         }
     }
 }

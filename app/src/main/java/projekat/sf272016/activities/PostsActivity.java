@@ -54,7 +54,7 @@ public class PostsActivity extends AppCompatActivity{
 
         /* Toolbar */
         toolbarHelper = new ToolbarHelper(this);
-        toolbarHelper.initialize();
+        toolbarHelper.initialize("Posts");
 
         // Settings
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -98,15 +98,13 @@ public class PostsActivity extends AppCompatActivity{
     private class DrawerClickHandler implements IDrawerClickHandler {
         @Override
         public void handleClick(View view, int position){
-            String option = ((TextView)((RelativeLayout) view).getChildAt(1)).getText().toString();
             Intent intent;
-            switch (option){
+            switch ((String)view.getTag()){
                 case "Settings":
                     intent = new Intent(PostsActivity.this, SettingsActivity.class);
                     startActivity(intent);
                     break;
                 case "Logout":
-
                     // Brisemo username iz SharedPreferences
                     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PostsActivity.this);
                     SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();

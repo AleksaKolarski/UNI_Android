@@ -43,7 +43,7 @@ public class ReadPostActivity extends AppCompatActivity {
 
         /* Toolbar */
         toolbarHelper = new ToolbarHelper(this);
-        toolbarHelper.initialize();
+        toolbarHelper.initialize("Post");
 
         // Ucitavanje posta
         postId = (Integer)getIntent().getIntExtra("postId", 0);
@@ -67,10 +67,9 @@ public class ReadPostActivity extends AppCompatActivity {
                     readPostAuthor.setText(post.getAuthor().getUsername());
                 }
             }
-
             @Override
             public void onFailure(Call<Post> call, Throwable t) {
-                ((TextView) findViewById(R.id.readPostDescription)).setText(t.getMessage() + "\n" + t.getCause().toString());
+                Toast.makeText(ReadPostActivity.this, "Error loading post", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -78,7 +77,7 @@ public class ReadPostActivity extends AppCompatActivity {
     private class DrawerClickHandler implements IDrawerClickHandler {
         @Override
         public void handleClick(View view, int position){
-            Toast.makeText(getApplicationContext(), ((TextView)((RelativeLayout) view).getChildAt(1)).getText(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), ((String)view.getTag()), Toast.LENGTH_SHORT).show();
         }
     }
 

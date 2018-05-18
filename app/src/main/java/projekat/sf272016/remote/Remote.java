@@ -10,4 +10,5 @@ public class Remote {
 
     public static LoginRemote loginRemote = retrofit.create(LoginRemote.class);
     public static PostRemote postRemote = retrofit.create(PostRemote.class);
+    public static UserRemote userRemote = retrofit.create(UserRemote.class);
 }

@@ -58,6 +58,8 @@ public class DrawerListAdapter extends BaseAdapter {
         subtitleView.setText( drawerItems.get(position).getItemSubtitle() );
         iconView.setImageResource(drawerItems.get(position).getItemIcon());
 
+        view.setTag(drawerItems.get(position).getItemTitle());
+
         return view;
     }
 }

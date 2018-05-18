@@ -16,8 +16,9 @@ public class ToolbarHelper {
         this.activity = activity;
     }
 
-    public void initialize(){
+    public void initialize(String title){
         Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
+        toolbar.setTitle(title);
         DrawerLayout drawerLayout = (DrawerLayout) activity.findViewById(R.id.drawerLayout);
         activity.setSupportActionBar(toolbar);
         final android.support.v7.app.ActionBar actionBar = activity.getSupportActionBar();

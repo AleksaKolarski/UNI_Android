@@ -52,6 +52,8 @@ public class DrawerHelper {
         SharedPreferences sharedPreferences;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         String username = sharedPreferences.getString("loggedInUserUsername", "");
+        String name = sharedPreferences.getString("loggedInUserName", "");
+        ((TextView)activity.findViewById(R.id.drawerProfileName)).setText(name);
         ((TextView)activity.findViewById(R.id.drawerProfileUsername)).setText(username);
     }
 

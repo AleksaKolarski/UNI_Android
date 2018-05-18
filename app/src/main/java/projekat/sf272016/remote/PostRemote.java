@@ -24,7 +24,7 @@ public interface PostRemote {
     @PUT(Remote.APP_PATH + "/posts")
     Call<Post> editPost(@Body Post post);
 
-    // CREATE NEW
+    // CREATE
     @POST(Remote.APP_PATH + "/posts")
     Call<Post> createPost(@Body Post post);
 }
