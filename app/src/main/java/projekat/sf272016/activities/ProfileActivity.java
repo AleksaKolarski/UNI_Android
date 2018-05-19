@@ -1,11 +1,20 @@
 package projekat.sf272016.activities;
 
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,8 +29,16 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import projekat.sf272016.R;
 import projekat.sf272016.misc.DrawerHelper;
 import projekat.sf272016.misc.IDrawerClickHandler;
@@ -79,14 +96,34 @@ public class ProfileActivity extends AppCompatActivity {
                         Toast.makeText(ProfileActivity.this, "Could not find user.", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    ((ImageView) findViewById(R.id.profileActivityImage)).setImageBitmap(user.getPhoto());
                     ((TextView) findViewById(R.id.profileActivityName)).setText(user.getName());
                     ((TextView) findViewById(R.id.profileActivityUsername)).setText(user.getUsername());
-                }
 
+                    Call<ResponseBody> call2 = Remote.userRemote.getUserImage(user.getUsername());
+                    call2.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            String imageBase64 = null;
+                            try {
+                                imageBase64 = response.body().string();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if(imageBase64 != null){
+                                byte[] imageByte = Base64.decode(imageBase64, Base64.NO_WRAP | Base64.NO_CLOSE);
+                                Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageByte, 0, imageByte.length);
+                                if(imageBitmap != null){
+                                    ((ImageView)findViewById(R.id.profileActivityImage)).setImageBitmap(imageBitmap);
+                                }
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        }
+                    });
+                }
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
-                    Toast.makeText(ProfileActivity.this, "Could not find user.", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -101,11 +138,65 @@ public class ProfileActivity extends AppCompatActivity {
             changePasswordBox2 = (EditText) findViewById(R.id.profileActivityChangePasswordBox2);
     }
 
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    // Pokretanje kamere
+    public void btnProfilePicture(View view) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    // Rezultat kamere
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            try{
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                if(user != null) {
+                    ((ImageView) findViewById(R.id.profileActivityImage)).setImageBitmap(imageBitmap);
+                    user.setPhoto(imageBitmap);
+
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] bitmapdata = stream.toByteArray();
+
+                    String bitmapBase64 = Base64.encodeToString(bitmapdata, Base64.NO_WRAP | Base64.NO_CLOSE);
+
+                    Call<Void> call = Remote.userRemote.changeUserImage(user.getUsername(), bitmapBase64);
+
+                    call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if (response.code() == 200) {
+                                Toast.makeText(ProfileActivity.this, "Image sent", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Toast.makeText(ProfileActivity.this, "could not send image", Toast.LENGTH_SHORT).show();
+                                ((TextView)findViewById(R.id.profileActivityName)).setText(response.code() + " " + response.message() + "" + response.toString());
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Toast.makeText(ProfileActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+            catch (Exception e){
+                Toast.makeText(this, "Could not load image.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private class DrawerClickHandler implements IDrawerClickHandler {
         @Override
         public void handleClick(View view, int position) {
             Intent intent;
-            switch ((String)view.getTag()){
+            switch ((String) view.getTag()) {
                 case "Posts":
                     intent = new Intent(ProfileActivity.this, PostsActivity.class);
                     startActivity(intent);

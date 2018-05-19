@@ -1,5 +1,6 @@
 package projekat.sf272016.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -77,7 +78,17 @@ public class ReadPostActivity extends AppCompatActivity {
     private class DrawerClickHandler implements IDrawerClickHandler {
         @Override
         public void handleClick(View view, int position){
-            Toast.makeText(getApplicationContext(), ((String)view.getTag()), Toast.LENGTH_SHORT).show();
+            Intent intent;
+            switch ((String)view.getTag()){
+                case "Posts":
+                    intent = new Intent(ReadPostActivity.this, PostsActivity.class);
+                    startActivity(intent);
+                    break;
+                case "Settings":
+                    intent = new Intent(ReadPostActivity.this, SettingsActivity.class);
+                    startActivity(intent);
+                    break;
+            }
         }
     }
 

@@ -57,12 +57,16 @@ public class PostsActivity extends AppCompatActivity{
         toolbarHelper.initialize("Posts");
 
         // Settings
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
     }
 
     @Override
     protected void onResume(){
         super.onResume();
+
+        if(sharedPreferences == null){
+            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        }
 
         // Settings
         consultPreferences();
@@ -105,10 +109,11 @@ public class PostsActivity extends AppCompatActivity{
                     startActivity(intent);
                     break;
                 case "Logout":
-                    // Brisemo username iz SharedPreferences
+                    // Brisemo username i name iz SharedPreferences
                     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PostsActivity.this);
                     SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
                     sharedPreferencesEditor.remove("loggedInUserUsername");
+                    sharedPreferencesEditor.remove("loggedInUserName");
                     sharedPreferencesEditor.commit();
 
                     intent = new Intent(PostsActivity.this, LoginActivity.class);
