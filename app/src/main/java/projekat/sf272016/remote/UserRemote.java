@@ -39,11 +39,4 @@ public interface UserRemote {
     // CREATE
     @POST(Remote.APP_PATH + "/users")
     Call<User> createUser(@Body User user);
-
-    @POST(Remote.APP_PATH + "/users/image")
-    @FormUrlEncoded
-    Call<Void> changeUserImage(@Field("username") String username, @Field("imageBase64") String bitmapBase64);
-
-    @GET(Remote.APP_PATH + "/users/image/{username}")
-    Call<ResponseBody> getUserImage(@Path("username") String username);
 }

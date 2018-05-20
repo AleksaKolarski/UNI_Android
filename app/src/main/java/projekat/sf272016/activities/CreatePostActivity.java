@@ -2,7 +2,10 @@ package projekat.sf272016.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,45 +57,72 @@ public class CreatePostActivity extends AppCompatActivity {
 
     public void btnCreate(View view) {
         Post post = new Post();
-        post.setTitle(((EditText)findViewById(R.id.createPostActivityTitle)).getText().toString());
-        post.setDescription(((EditText)findViewById(R.id.createPostActivityDescription)).getText().toString());
+        post.setTitle(((EditText) findViewById(R.id.createPostActivityTitle)).getText().toString());
+        post.setDescription(((EditText) findViewById(R.id.createPostActivityDescription)).getText().toString());
         User user = new User();
         user.setUsername(PreferenceManager.getDefaultSharedPreferences(this).getString("loggedInUserUsername", ""));
         post.setAuthor(user);
+
+        BitmapDrawable drawable = (BitmapDrawable)((ImageView)findViewById(R.id.createPostActivityPhoto)).getDrawable();
+        if(drawable != null){
+            post.setPhoto(drawable.getBitmap());
+        }
 
         Call<Post> call = Remote.postRemote.createPost(post);
         call.enqueue(new Callback<Post>() {
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
                 Post post1 = response.body();
-                if(response.code() == 201 && post1 != null){
+                if (response.code() == 201 && post1 != null) {
                     Toast.makeText(CreatePostActivity.this, "Post created.", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(CreatePostActivity.this, ReadPostActivity.class);
                     intent.putExtra("postId", post1.getId());
                     startActivity(intent);
                     finish();
-                }
-                else {
+                } else {
                     Toast.makeText(CreatePostActivity.this, "Could not create post.", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<Post> call, Throwable t) {
-                Toast.makeText(CreatePostActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
             }
         });
     }
 
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
     public void btnPhoto(View view) {
-        // TODO Photo chooser
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
     }
+
+
+    // Rezultat kamere
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            try {
+                final Bitmap imageBitmap = (Bitmap) extras.get("data");
+                ((ImageView)findViewById(R.id.createPostActivityPhoto)).setImageBitmap(imageBitmap);
+            } catch (Exception e) {
+                Toast.makeText(this, "Could not load image.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     private class DrawerClickHandler implements IDrawerClickHandler {
         @Override
-        public void handleClick(View view, int position){
+        public void handleClick(View view, int position) {
             Intent intent;
-            switch ((String)view.getTag()){
+            switch ((String) view.getTag()) {
                 case "Posts":
                     intent = new Intent(CreatePostActivity.this, PostsActivity.class);
                     startActivity(intent);
