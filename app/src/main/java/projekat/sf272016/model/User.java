@@ -17,6 +17,8 @@ public class User {
     @Expose
     private String name;
 
+    @SerializedName("photo")
+    @Expose
     private Bitmap photo;
 
     @SerializedName("username")

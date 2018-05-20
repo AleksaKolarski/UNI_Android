@@ -85,48 +85,25 @@ public class ProfileActivity extends AppCompatActivity {
         super.onResume();
 
         // Ucitavanje korisnika
-        if (user == null) {
-            String username = PreferenceManager.getDefaultSharedPreferences(this).getString("loggedInUserUsername", "");
-            Call<User> call = Remote.userRemote.getUserByUsername(username);
-            call.enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    user = response.body();
-                    if (user == null || response.code() != 200) {
-                        Toast.makeText(ProfileActivity.this, "Could not find user.", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    ((TextView) findViewById(R.id.profileActivityName)).setText(user.getName());
-                    ((TextView) findViewById(R.id.profileActivityUsername)).setText(user.getUsername());
-
-                    Call<ResponseBody> call2 = Remote.userRemote.getUserImage(user.getUsername());
-                    call2.enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            String imageBase64 = null;
-                            try {
-                                imageBase64 = response.body().string();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            if(imageBase64 != null){
-                                byte[] imageByte = Base64.decode(imageBase64, Base64.NO_WRAP | Base64.NO_CLOSE);
-                                Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageByte, 0, imageByte.length);
-                                if(imageBitmap != null){
-                                    ((ImageView)findViewById(R.id.profileActivityImage)).setImageBitmap(imageBitmap);
-                                }
-                            }
-                        }
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        }
-                    });
+        String username = PreferenceManager.getDefaultSharedPreferences(this).getString("loggedInUserUsername", "");
+        Call<User> call = Remote.userRemote.getUserByUsername(username);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                user = response.body();
+                if (user == null || response.code() != 200) {
+                    Log.e("Callback", "could not find user");
+                    return;
                 }
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                }
-            });
-        }
+                ((TextView) findViewById(R.id.profileActivityName)).setText(user.getName());
+                ((TextView) findViewById(R.id.profileActivityUsername)).setText(user.getUsername());
+                ((ImageView) findViewById(R.id.profileActivityImage)).setImageBitmap(user.getPhoto());
+            }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.e("profile getUser callback", t.getMessage());;
+            }
+        });
 
         if (changePasswordButton == null)
             changePasswordButton = (Button) findViewById(R.id.profileActivityChangePasswordButton);
@@ -154,39 +131,34 @@ public class ProfileActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
-            try{
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                if(user != null) {
-                    ((ImageView) findViewById(R.id.profileActivityImage)).setImageBitmap(imageBitmap);
+            try {
+                final Bitmap imageBitmap = (Bitmap) extras.get("data");
+                if (user != null) {
                     user.setPhoto(imageBitmap);
 
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    byte[] bitmapdata = stream.toByteArray();
-
-                    String bitmapBase64 = Base64.encodeToString(bitmapdata, Base64.NO_WRAP | Base64.NO_CLOSE);
-
-                    Call<Void> call = Remote.userRemote.changeUserImage(user.getUsername(), bitmapBase64);
-
-                    call.enqueue(new Callback<Void>() {
+                    Call<User> call = Remote.userRemote.editUser(user);
+                    call.enqueue(new Callback<User>() {
                         @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
+                        public void onResponse(Call<User> call, Response<User> response) {
                             if (response.code() == 200) {
-                                Toast.makeText(ProfileActivity.this, "Image sent", Toast.LENGTH_SHORT).show();
-                            }
-                            else{
-                                Toast.makeText(ProfileActivity.this, "could not send image", Toast.LENGTH_SHORT).show();
-                                ((TextView)findViewById(R.id.profileActivityName)).setText(response.code() + " " + response.message() + "" + response.toString());
+                                Toast.makeText(ProfileActivity.this, "Photo changed", Toast.LENGTH_SHORT).show();
+                                ((ImageView) findViewById(R.id.profileActivityImage)).setImageBitmap(imageBitmap);
+                            } else {
+                                Toast.makeText(ProfileActivity.this, "Could not edit user", Toast.LENGTH_SHORT).show();
                             }
                         }
+
                         @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            Toast.makeText(ProfileActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                        public void onFailure(Call<User> call, Throwable t) {
+                            Toast.makeText(ProfileActivity.this, "Error editing user", Toast.LENGTH_SHORT).show();
+                            t.printStackTrace();
                         }
                     });
                 }
-            }
-            catch (Exception e){
+                else{
+                    Toast.makeText(this, "user = null", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
                 Toast.makeText(this, "Could not load image.", Toast.LENGTH_SHORT).show();
             }
         }
@@ -238,25 +210,20 @@ public class ProfileActivity extends AppCompatActivity {
             call.enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
-
                     user = response.body();
-
                     if (user == null || response.code() != 200) {
                         Toast.makeText(ProfileActivity.this, "Could not change password.", Toast.LENGTH_SHORT).show();
                         return;
                     }
-
-                    // Sakrivamo polja za unos nove sifre i dugme za potvrdu
                     changePasswordLayout.setVisibility(View.INVISIBLE);
-                    // Otkrivamo dugme za promenu sifre
                     changePasswordButton.setVisibility(View.VISIBLE);
-
                     Toast.makeText(ProfileActivity.this, "Password changed.", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
                     Toast.makeText(ProfileActivity.this, "Could not change password.", Toast.LENGTH_SHORT).show();
+                    t.printStackTrace();
                 }
             });
         } else {

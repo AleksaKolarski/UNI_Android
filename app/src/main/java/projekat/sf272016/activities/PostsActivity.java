@@ -55,20 +55,16 @@ public class PostsActivity extends AppCompatActivity{
         /* Toolbar */
         toolbarHelper = new ToolbarHelper(this);
         toolbarHelper.initialize("Posts");
-
-        // Settings
-
     }
 
     @Override
     protected void onResume(){
         super.onResume();
 
-        if(sharedPreferences == null){
+        // Settings
+        if(sharedPreferences == null) {
             sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         }
-
-        // Settings
         consultPreferences();
 
         // Povlacenje JSON-a i deserijalizacija u objekte
@@ -76,7 +72,6 @@ public class PostsActivity extends AppCompatActivity{
         call.enqueue(new Callback<ArrayList<Post>>(){
             @Override
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response){
-                //((TextView) findViewById(R.id.testTextView)).setText(response.code() + " " + response.message());
                 ArrayList<Post> posts = response.body();
                 if(posts != null) {
                     PostListAdapter postListAdapter = new PostListAdapter(PostsActivity.this, posts);
@@ -89,7 +84,8 @@ public class PostsActivity extends AppCompatActivity{
             }
             @Override
             public void onFailure(Call<ArrayList<Post>> call, Throwable t){
-                ((TextView) findViewById(R.id.testTextView)).setText("Error");
+                ((TextView) findViewById(R.id.testTextView)).setText(t.getMessage() + "\n" + t.getCause().getMessage() + "\n" + t.getCause().getMessage());
+                t.printStackTrace();
             }
         });
     }
