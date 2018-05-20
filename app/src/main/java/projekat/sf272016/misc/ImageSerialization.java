@@ -13,6 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class ImageSerialization extends TypeAdapter<Bitmap> {
+
     private static final TypeAdapter<Bitmap> bitmapTypeAdapter = new ImageSerialization();
 
     private ImageSerialization() {

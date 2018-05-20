@@ -11,7 +11,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import projekat.sf272016.R;
 import projekat.sf272016.misc.DrawerHelper;
@@ -65,7 +67,9 @@ public class ReadPostActivity extends AppCompatActivity {
 
                     readPostTitle.setText(post.getTitle());
                     readPostDescription.setText(post.getDescription());
+                    readPostImage.setImageBitmap(post.getPhoto());
                     readPostAuthor.setText(post.getAuthor().getUsername());
+                    readPostDate.setText(new SimpleDateFormat("dd.MM.yyyy.").format(post.getDate()));
                 }
             }
             @Override

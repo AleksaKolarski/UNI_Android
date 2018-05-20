@@ -5,10 +5,12 @@ import android.graphics.Bitmap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import projekat.sf272016.misc.DateSerialization;
 import projekat.sf272016.misc.ImageSerialization;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -29,7 +31,7 @@ public class Remote {
         return client;
     }
 
-    static Gson gson = new GsonBuilder().registerTypeAdapter(Bitmap.class, ImageSerialization.getBitmapTypeAdapter()).create();
+    static Gson gson = new GsonBuilder().registerTypeAdapter(Bitmap.class, ImageSerialization.getBitmapTypeAdapter()).registerTypeAdapter(Date.class, DateSerialization.getDateTypeAdapter()).create();
 
     public static Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://192.168.1.8:8080/")
