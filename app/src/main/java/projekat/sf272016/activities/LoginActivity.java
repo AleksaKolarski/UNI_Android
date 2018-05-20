@@ -17,11 +17,14 @@ import projekat.sf272016.remote.Remote;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText usernameBox;
     private EditText passwordBox;
+
+    private EditText addressBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +40,19 @@ public class LoginActivity extends AppCompatActivity {
             usernameBox = (EditText) findViewById(R.id.loginActivityUsername);
         if(passwordBox == null)
             passwordBox = (EditText) findViewById(R.id.loginActivityPassword);
+        if(addressBox == null){
+            addressBox = (EditText) findViewById(R.id.loginActivityHostIP);
+        }
+
 
         // Ako je vec ulogovan
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String hostAddress = sharedPreferences.getString("hostAddress", "192.168.1.8:8080");
+        addressBox.setText(hostAddress);
+
         if(!sharedPreferences.getString("loggedInUserUsername", "").equals("")){
+            Remote.init(hostAddress);
             Intent intent = new Intent(LoginActivity.this, PostsActivity.class);
             startActivity(intent);
             finish();
@@ -52,8 +64,13 @@ public class LoginActivity extends AppCompatActivity {
         String username = usernameBox.getText().toString();
         String password = passwordBox.getText().toString();
 
-        Call<User> call = Remote.loginRemote.login(username, password);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+        SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+        sharedPreferencesEditor.putString("hostAddress", addressBox.getText().toString());
+        sharedPreferencesEditor.commit();
+        Remote.init(addressBox.getText().toString());
 
+        Call<User> call = Remote.loginRemote.login(username, password);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
