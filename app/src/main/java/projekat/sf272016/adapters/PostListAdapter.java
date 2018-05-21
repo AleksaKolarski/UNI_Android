@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +40,7 @@ public class PostListAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return posts.get(position).getId();
     }
 
     @Override
@@ -55,12 +57,21 @@ public class PostListAdapter extends BaseAdapter {
 
         ImageView iconView = (ImageView) view.findViewById(R.id.activity_posts_post_item_image);
         TextView titleView = (TextView) view.findViewById(R.id.activity_posts_post_item_title);
+        TextView descriptionView = (TextView) view.findViewById(R.id.activity_posts_post_item_description);
 
-        iconView.setImageBitmap(posts.get(position).getPhoto());
-        titleView.setText(posts.get(position).getTitle());
+        Post post = posts.get(position);
+
+        if(post.getPhoto() != null) {
+            iconView.setImageBitmap(post.getPhoto());
+        }
+        else {
+            iconView.setImageResource(R.drawable.ic_insert_photo_black_24dp);
+        }
+        titleView.setText(post.getTitle());
+        descriptionView.setText(post.getDescription());
 
         view.setOnClickListener(new PostsClickListener());
-        view.setTag(posts.get(position).getId());
+        view.setTag(post.getId());
 
         return view;
     }

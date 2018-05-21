@@ -1,25 +1,29 @@
 package projekat.sf272016.activities;
 
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import projekat.sf272016.R;
+import projekat.sf272016.adapters.CommentAdapter;
 import projekat.sf272016.misc.DrawerHelper;
 import projekat.sf272016.misc.IDrawerClickHandler;
 import projekat.sf272016.misc.ToolbarHelper;
+import projekat.sf272016.model.Comment;
 import projekat.sf272016.model.Post;
+import projekat.sf272016.model.User;
 import projekat.sf272016.model.misc.DrawerListItem;
 import projekat.sf272016.remote.Remote;
 import retrofit2.Call;
@@ -49,14 +53,14 @@ public class ReadPostActivity extends AppCompatActivity {
         toolbarHelper.initialize("Post");
 
         // Ucitavanje posta
-        postId = (Integer)getIntent().getIntExtra("postId", 0);
+        postId = (Integer) getIntent().getIntExtra("postId", 0);
 
         Call<Post> call = Remote.postRemote.getPostById(postId);
         call.enqueue(new Callback<Post>() {
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
                 Post post = response.body();
-                if(post != null){
+                if (post != null) {
                     TextView readPostTitle = (TextView) findViewById(R.id.readPostTitle);
                     TextView readPostDescription = (TextView) findViewById(R.id.readPostDescription);
                     ImageView readPostImage = (ImageView) findViewById(R.id.readPostImage);
@@ -67,23 +71,87 @@ public class ReadPostActivity extends AppCompatActivity {
 
                     readPostTitle.setText(post.getTitle());
                     readPostDescription.setText(post.getDescription());
+                    ImageView imageView = ((ImageView)findViewById(R.id.readPostImage));
+                    if(post.getPhoto() != null){
+
+                        imageView.setAdjustViewBounds(true);
+                    }
+                    else{
+                        imageView.setAdjustViewBounds(false);
+                    }
                     readPostImage.setImageBitmap(post.getPhoto());
                     readPostAuthor.setText(post.getAuthor().getUsername());
                     readPostDate.setText(new SimpleDateFormat("dd.MM.yyyy.").format(post.getDate()));
                 }
             }
+
             @Override
             public void onFailure(Call<Post> call, Throwable t) {
                 Toast.makeText(ReadPostActivity.this, "Error loading post", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+        Call<ArrayList<Comment>> call2 = Remote.commentRemote.getCommentsByPostId(postId);
+        call2.enqueue(new Callback<ArrayList<Comment>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Comment>> call, Response<ArrayList<Comment>> response) {
+                ArrayList<Comment> comments = response.body();
+                if (comments != null) {
+                    CommentAdapter commentAdapter = new CommentAdapter(ReadPostActivity.this, comments);
+                    ListView commentListView = (ListView) findViewById(R.id.readPostComments);
+                    commentListView.setAdapter(commentAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Comment>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void btnNewComment(View view) {
+        String commentTitle = ((EditText) findViewById(R.id.activity_post_comment_new_title)).getText().toString();
+        String commentDescription = ((EditText) findViewById(R.id.activity_post_comment_new_description)).getText().toString();
+        if (commentTitle.length() >= 3 && commentDescription.length() >= 3) {
+            Comment comment = new Comment();
+            User author = new User();
+            String username = PreferenceManager.getDefaultSharedPreferences(this).getString("loggedInUserUsername", "");
+            if (username.length() > 0) {
+                author.setUsername(username);
+                comment.setAuthor(author);
+                comment.setTitle(commentTitle);
+                comment.setDescription(commentDescription);
+                Post post = new Post();
+                post.setId(postId);
+                comment.setPost(post);
+
+                Call<Comment> call = Remote.commentRemote.createComment(comment);
+                call.enqueue(new Callback<Comment>() {
+                    @Override
+                    public void onResponse(Call<Comment> call, Response<Comment> response) {
+                        if (response.code() == 201) {
+                            ((EditText) findViewById(R.id.activity_post_comment_new_title)).setText("");
+                            ((EditText) findViewById(R.id.activity_post_comment_new_description)).setText("");
+                            recreate();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Comment> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
+            }
+        }
     }
 
     private class DrawerClickHandler implements IDrawerClickHandler {
         @Override
-        public void handleClick(View view, int position){
+        public void handleClick(View view, int position) {
             Intent intent;
-            switch ((String)view.getTag()){
+            switch ((String) view.getTag()) {
                 case "Posts":
                     intent = new Intent(ReadPostActivity.this, PostsActivity.class);
                     startActivity(intent);
@@ -106,10 +174,10 @@ public class ReadPostActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.toolbar_action_new:
-                Toast.makeText(getApplicationContext(), "new" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "new", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.toolbar_action_sync:
-                Toast.makeText(getApplicationContext(), "sync" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "sync", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

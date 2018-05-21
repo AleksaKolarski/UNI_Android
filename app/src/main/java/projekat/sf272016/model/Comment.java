@@ -1,15 +1,40 @@
 package projekat.sf272016.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 public class Comment {
+
+    @SerializedName("id")
+    @Expose
     private int id;
+
+    @SerializedName("title")
+    @Expose
     private String title;
+
+    @SerializedName("description")
+    @Expose
     private String description;
+
+    @SerializedName("user")
+    @Expose
     private User author;
+
+    @SerializedName("date")
+    @Expose
     private Date date;
+
     private Post post;
+
+    @SerializedName("likes")
+    @Expose
     private int likes;
+
+    @SerializedName("dislikes")
+    @Expose
     private int dislikes;
     // private Status status; // U projektu je navedena ova promenljiva, ko zna za sta
 

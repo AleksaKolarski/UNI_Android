@@ -14,81 +14,146 @@
         android:layout_height="match_parent">
 
         <!-- Main content -->
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="10dp">
-
-            <!-- Title -->
-            <TextView
-                android:id="@+id/readPostTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Title placeholder"
-                android:textStyle="bold"
-                android:textSize="30sp"/>
-
-            <!-- Image -->
-            <ImageView
-                android:id="@+id/readPostImage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <!-- Description -->
-            <TextView
-                android:id="@+id/readPostDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Description placeholder"
-                android:textSize="18sp" />
-
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider" />
-
-            <!-- Tags -->
-            <TextView
-                android:id="@+id/readPostTags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Tags placeholder" />
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:focusableInTouchMode="true"
+                android:orientation="vertical"
+                android:padding="10dp">
 
-                <!-- Author -->
+                <!-- Title -->
                 <TextView
-                    android:id="@+id/readPostAuthor"
+                    android:id="@+id/readPostTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Title placeholder"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <!-- Image -->
+                <ImageView
+                    android:id="@+id/readPostImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:layout_gravity="center_horizontal"/>
+
+                <!-- Description -->
+                <TextView
+                    android:id="@+id/readPostDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:text="Author placeholder"
-                    android:textStyle="italic"/>
+                    android:text="Description placeholder"
+                    android:textSize="18sp" />
 
-                <!-- Date -->
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Author -->
+                    <TextView
+                        android:id="@+id/readPostAuthor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="Author placeholder"
+                        android:textStyle="italic" />
+
+                    <!-- Date -->
+                    <TextView
+                        android:id="@+id/readPostDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="Date placeholder" />
+
+                    <!-- Location -->
+                    <TextView
+                        android:id="@+id/readPostLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="Location placeholder" />
+
+                </LinearLayout>
+
+                <!-- Tags -->
                 <TextView
-                    android:id="@+id/readPostDate"
+                    android:id="@+id/readPostTags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tags placeholder" />
+
+
+                <!-- COMMENTS: -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
+                    android:background="?android:attr/listDivider" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:text="Date placeholder" />
+                    android:text="Comments:"
+                    android:textStyle="bold" />
 
-                <!-- Location -->
-                <TextView
-                    android:id="@+id/readPostLocation"
-                    android:layout_width="wrap_content"
+                <projekat.sf272016.misc.ProperListView
+                    android:id="@+id/readPostComments"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:text="Location placeholder" />
+                    android:layout_weight="1">
+
+                </projekat.sf272016.misc.ProperListView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="New comment:"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/activity_post_comment_new_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Title"/>
+
+                    <EditText
+                        android:id="@+id/activity_post_comment_new_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Description"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:onClick="btnNewComment"
+                        android:text="Post"
+                        android:textAllCaps="false" />
+
+                </LinearLayout>
 
             </LinearLayout>
-
-        </LinearLayout>
+        </ScrollView>
 
         <!-- Drawer -->
         <include layout="@layout/drawer" />

@@ -24,12 +24,16 @@ public class Post {
     @Expose
     private String description;
 
+    @SerializedName("photo")
+    @Expose
     private Bitmap photo;
 
     @SerializedName("user")
     @Expose
     private User user;
 
+    @SerializedName("date")
+    @Expose
     private Date date;
 
     private Location location;
