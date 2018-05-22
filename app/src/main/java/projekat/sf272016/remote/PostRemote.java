@@ -27,4 +27,12 @@ public interface PostRemote {
     // CREATE
     @POST(Remote.APP_PATH + "/posts")
     Call<Post> createPost(@Body Post post);
+
+    // LIKE
+    @POST(Remote.APP_PATH + "/posts/{id}/like")
+    Call<Integer> likePost(@Path("id") int id);
+
+    // DISLIKE
+    @POST(Remote.APP_PATH + "/posts/{id}/dislike")
+    Call<Integer> dislikePost(@Path("id") int id);
 }

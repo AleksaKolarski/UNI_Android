@@ -18,4 +18,12 @@ public interface CommentRemote {
     // CREATE
     @POST(Remote.APP_PATH + "/comments")
     Call<Comment> createComment(@Body Comment comment);
+
+    // LIKE
+    @POST(Remote.APP_PATH + "/comments/{id}/like")
+    Call<Integer> likeComment(@Path("id") int id);
+
+    // DISLIKE
+    @POST(Remote.APP_PATH + "/comments/{id}/dislike")
+    Call<Integer> dislikeComment(@Path("id") int id);
 }

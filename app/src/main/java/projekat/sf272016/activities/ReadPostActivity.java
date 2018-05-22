@@ -1,5 +1,6 @@
 package projekat.sf272016.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -59,7 +60,7 @@ public class ReadPostActivity extends AppCompatActivity {
         call.enqueue(new Callback<Post>() {
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
-                Post post = response.body();
+                final Post post = response.body();
                 if (post != null) {
                     TextView readPostTitle = (TextView) findViewById(R.id.readPostTitle);
                     TextView readPostDescription = (TextView) findViewById(R.id.readPostDescription);
@@ -68,6 +69,8 @@ public class ReadPostActivity extends AppCompatActivity {
                     TextView readPostAuthor = (TextView) findViewById(R.id.readPostAuthor);
                     TextView readPostDate = (TextView) findViewById(R.id.readPostDate);
                     TextView readPostLocation = (TextView) findViewById(R.id.readPostLocation);
+                    final TextView readPostLikes = (TextView) findViewById(R.id.activity_post_likes);
+                    final TextView readPostDislikes = (TextView) findViewById(R.id.activity_post_dislikes);
 
                     readPostTitle.setText(post.getTitle());
                     readPostDescription.setText(post.getDescription());
@@ -82,9 +85,47 @@ public class ReadPostActivity extends AppCompatActivity {
                     readPostImage.setImageBitmap(post.getPhoto());
                     readPostAuthor.setText(post.getAuthor().getUsername());
                     readPostDate.setText(new SimpleDateFormat("dd.MM.yyyy.").format(post.getDate()));
+                    readPostLikes.setText(((Integer)post.getLikes()).toString());
+                    readPostDislikes.setText(((Integer)post.getDislikes()).toString());
+
+
+                    ((ImageView)findViewById(R.id.activity_post_like_button)).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Call<Integer> call = Remote.postRemote.likePost(postId);
+                            call.enqueue(new Callback<Integer>() {
+                                @Override
+                                public void onResponse(Call<Integer> call, Response<Integer> response) {
+                                    if(response.code() == 200 && response.body() != null)
+                                        readPostLikes.setText(response.body().toString());
+                                }
+                                @Override
+                                public void onFailure(Call<Integer> call, Throwable t) {
+                                    t.printStackTrace();
+                                }
+                            });
+                        }
+                    });
+
+                    ((ImageView)findViewById(R.id.activity_post_dislike_button)).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Call<Integer> call = Remote.postRemote.dislikePost(postId);
+                            call.enqueue(new Callback<Integer>() {
+                                @Override
+                                public void onResponse(Call<Integer> call, Response<Integer> response) {
+                                    if(response.code() == 200 && response.body() != null)
+                                        readPostDislikes.setText(response.body().toString());
+                                }
+                                @Override
+                                public void onFailure(Call<Integer> call, Throwable t) {
+                                    t.printStackTrace();
+                                }
+                            });
+                        }
+                    });
                 }
             }
-
             @Override
             public void onFailure(Call<Post> call, Throwable t) {
                 Toast.makeText(ReadPostActivity.this, "Error loading post", Toast.LENGTH_SHORT).show();
@@ -173,11 +214,8 @@ public class ReadPostActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.toolbar_action_new:
-                Toast.makeText(getApplicationContext(), "new", Toast.LENGTH_SHORT).show();
-                return true;
             case R.id.toolbar_action_sync:
-                Toast.makeText(getApplicationContext(), "sync", Toast.LENGTH_SHORT).show();
+                recreate();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

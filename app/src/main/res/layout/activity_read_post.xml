@@ -56,6 +56,48 @@
                     android:layout_height="1dp"
                     android:background="?android:attr/listDivider" />
 
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:orientation="horizontal">
+
+                    <!-- LIKES -->
+                    <TextView
+                        android:id="@+id/activity_post_likes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:text="0" />
+
+                    <ImageView
+                        android:id="@+id/activity_post_like_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="13dp"
+                        android:src="@drawable/ic_thumb_up_black_24dp" />
+
+                    <!-- DISLIKES -->
+                    <TextView
+                        android:id="@+id/activity_post_dislikes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:text="0" />
+
+                    <ImageView
+                        android:id="@+id/activity_post_dislike_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_thumb_down_black_24dp" />
+
+                </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
