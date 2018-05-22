@@ -2,10 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Settings, should always be in the overflow -->
+    <!-- Reload -->
     <item
-        android:id="@+id/toolbar_action_sync"
+        android:id="@+id/toolbar_action_reload"
         android:icon="@drawable/ic_sync_black_24dp"
-        android:title="sync"
+        android:title="Reload"
+        app:showAsAction="ifRoom" />
+
+    <!-- Delete -->
+    <item
+        android:id="@+id/toolbar_action_delete"
+        android:icon="@drawable/ic_delete_black_24dp"
+        android:visible="false"
+        android:title="Delete"
         app:showAsAction="ifRoom" />
 </menu>

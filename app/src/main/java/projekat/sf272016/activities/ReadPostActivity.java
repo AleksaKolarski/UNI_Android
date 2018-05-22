@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.menu.MenuView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +38,9 @@ public class ReadPostActivity extends AppCompatActivity {
     ToolbarHelper toolbarHelper;
     Integer postId;
 
+    String loggedInUser;
+    String postOwner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +66,9 @@ public class ReadPostActivity extends AppCompatActivity {
             public void onResponse(Call<Post> call, Response<Post> response) {
                 final Post post = response.body();
                 if (post != null) {
+                    postOwner = post.getAuthor().getUsername();
+                    invalidateOptionsMenu();
+
                     TextView readPostTitle = (TextView) findViewById(R.id.readPostTitle);
                     TextView readPostDescription = (TextView) findViewById(R.id.readPostDescription);
                     ImageView readPostImage = (ImageView) findViewById(R.id.readPostImage);
@@ -74,31 +81,31 @@ public class ReadPostActivity extends AppCompatActivity {
 
                     readPostTitle.setText(post.getTitle());
                     readPostDescription.setText(post.getDescription());
-                    ImageView imageView = ((ImageView)findViewById(R.id.readPostImage));
-                    if(post.getPhoto() != null){
+                    ImageView imageView = ((ImageView) findViewById(R.id.readPostImage));
+                    if (post.getPhoto() != null) {
 
                         imageView.setAdjustViewBounds(true);
-                    }
-                    else{
+                    } else {
                         imageView.setAdjustViewBounds(false);
                     }
                     readPostImage.setImageBitmap(post.getPhoto());
                     readPostAuthor.setText(post.getAuthor().getUsername());
                     readPostDate.setText(new SimpleDateFormat("dd.MM.yyyy.").format(post.getDate()));
-                    readPostLikes.setText(((Integer)post.getLikes()).toString());
-                    readPostDislikes.setText(((Integer)post.getDislikes()).toString());
+                    readPostLikes.setText(((Integer) post.getLikes()).toString());
+                    readPostDislikes.setText(((Integer) post.getDislikes()).toString());
 
 
-                    ((ImageView)findViewById(R.id.activity_post_like_button)).setOnClickListener(new View.OnClickListener() {
+                    ((ImageView) findViewById(R.id.activity_post_like_button)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Call<Integer> call = Remote.postRemote.likePost(postId);
                             call.enqueue(new Callback<Integer>() {
                                 @Override
                                 public void onResponse(Call<Integer> call, Response<Integer> response) {
-                                    if(response.code() == 200 && response.body() != null)
+                                    if (response.code() == 200 && response.body() != null)
                                         readPostLikes.setText(response.body().toString());
                                 }
+
                                 @Override
                                 public void onFailure(Call<Integer> call, Throwable t) {
                                     t.printStackTrace();
@@ -107,16 +114,17 @@ public class ReadPostActivity extends AppCompatActivity {
                         }
                     });
 
-                    ((ImageView)findViewById(R.id.activity_post_dislike_button)).setOnClickListener(new View.OnClickListener() {
+                    ((ImageView) findViewById(R.id.activity_post_dislike_button)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Call<Integer> call = Remote.postRemote.dislikePost(postId);
                             call.enqueue(new Callback<Integer>() {
                                 @Override
                                 public void onResponse(Call<Integer> call, Response<Integer> response) {
-                                    if(response.code() == 200 && response.body() != null)
+                                    if (response.code() == 200 && response.body() != null)
                                         readPostDislikes.setText(response.body().toString());
                                 }
+
                                 @Override
                                 public void onFailure(Call<Integer> call, Throwable t) {
                                     t.printStackTrace();
@@ -126,6 +134,7 @@ public class ReadPostActivity extends AppCompatActivity {
                     });
                 }
             }
+
             @Override
             public void onFailure(Call<Post> call, Throwable t) {
                 Toast.makeText(ReadPostActivity.this, "Error loading post", Toast.LENGTH_SHORT).show();
@@ -212,10 +221,43 @@ public class ReadPostActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem delete = menu.findItem(R.id.toolbar_action_delete);
+        if (postOwner != null) {
+            if (PreferenceManager.getDefaultSharedPreferences(ReadPostActivity.this).getString("loggedInUserUsername", "").equals(postOwner)) {
+                delete.setVisible(true);
+            } else {
+                delete.setVisible(false);
+            }
+        } else {
+            delete.setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.toolbar_action_sync:
+            case R.id.toolbar_action_reload:
                 recreate();
+                return true;
+            case R.id.toolbar_action_delete:
+                // TODO obrisi post
+                Call<Void> call = Remote.postRemote.deletePost(postId);
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.code() == 200) {
+                            Intent intent = new Intent(ReadPostActivity.this, PostsActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

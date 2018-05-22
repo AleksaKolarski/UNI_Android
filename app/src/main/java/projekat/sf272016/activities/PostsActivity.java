@@ -83,13 +83,9 @@ public class PostsActivity extends AppCompatActivity{
                     ListView postsListView = (ListView) findViewById(R.id.postsListView);
                     postsListView.setAdapter(postListAdapter);
                 }
-                else{
-                    ((TextView) findViewById(R.id.testTextView)).setText("lista prazna");
-                }
             }
             @Override
             public void onFailure(Call<ArrayList<Post>> call, Throwable t){
-                ((TextView) findViewById(R.id.testTextView)).setText(t.getMessage() + "\n" + t.getCause().getMessage() + "\n" + t.getCause().getMessage());
                 t.printStackTrace();
             }
         });

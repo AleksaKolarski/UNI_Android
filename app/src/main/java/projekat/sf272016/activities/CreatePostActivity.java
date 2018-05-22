@@ -56,6 +56,14 @@ public class CreatePostActivity extends AppCompatActivity {
     }
 
     public void btnCreate(View view) {
+
+        if(((EditText) findViewById(R.id.createPostActivityTitle)).getText().toString().length() < 3){
+            return;
+        }
+        if(((EditText) findViewById(R.id.createPostActivityDescription)).getText().toString().length() < 3){
+            return;
+        }
+
         Post post = new Post();
         post.setTitle(((EditText) findViewById(R.id.createPostActivityTitle)).getText().toString());
         post.setDescription(((EditText) findViewById(R.id.createPostActivityDescription)).getText().toString());

@@ -6,6 +6,7 @@ import java.util.Date;
 import projekat.sf272016.model.Post;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -36,6 +37,9 @@ public interface PostRemote {
     // CREATE
     @POST(Remote.APP_PATH + "/posts")
     Call<Post> createPost(@Body Post post);
+
+    @DELETE(Remote.APP_PATH + "/posts/{id}")
+    Call<Void> deletePost(@Path("id") Integer id);
 
     // LIKE
     @POST(Remote.APP_PATH + "/posts/{id}/like")
