@@ -19,7 +19,12 @@ import java.util.ArrayList;
 import projekat.sf272016.R;
 import projekat.sf272016.activities.ProfileActivity;
 import projekat.sf272016.adapters.DrawerListAdapter;
+import projekat.sf272016.model.User;
 import projekat.sf272016.model.misc.DrawerListItem;
+import projekat.sf272016.remote.Remote;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DrawerHelper {
 
@@ -55,7 +60,28 @@ public class DrawerHelper {
         String name = sharedPreferences.getString("loggedInUserName", "");
         ((TextView)activity.findViewById(R.id.drawerProfileName)).setText(name);
         ((TextView)activity.findViewById(R.id.drawerProfileUsername)).setText(username);
-        // TODO ucitati sliku korisnika
+
+        Call<User> call = Remote.userRemote.getUserByUsername(username);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.code() == 200){
+                    if(response.body() != null){
+                        User user = response.body();
+                        if(user.getPhoto() != null){
+                            ((ImageView)activity.findViewById(R.id.drawerProfileImage)).setImageBitmap(user.getPhoto());
+                        }
+                        else{
+                            ((ImageView)activity.findViewById(R.id.drawerProfileImage)).setImageResource(R.drawable.ic_person_black_24dp);
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {

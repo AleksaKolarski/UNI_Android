@@ -242,7 +242,6 @@ public class ReadPostActivity extends AppCompatActivity {
                 recreate();
                 return true;
             case R.id.toolbar_action_delete:
-                // TODO obrisi post
                 Call<Void> call = Remote.postRemote.deletePost(postId);
                 call.enqueue(new Callback<Void>() {
                     @Override
@@ -252,7 +251,6 @@ public class ReadPostActivity extends AppCompatActivity {
                             startActivity(intent);
                         }
                     }
-
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         t.printStackTrace();

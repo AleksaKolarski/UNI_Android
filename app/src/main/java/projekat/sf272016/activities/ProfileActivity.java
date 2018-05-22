@@ -63,8 +63,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     private User user;
 
-    // TODO brisanje korisnika
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
