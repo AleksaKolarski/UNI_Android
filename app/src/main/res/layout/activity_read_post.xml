@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -30,25 +31,25 @@
                     android:id="@+id/readPostTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Title placeholder"
                     android:textSize="30sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="Title placeholder" />
 
                 <!-- Image -->
                 <ImageView
                     android:id="@+id/readPostImage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:layout_gravity="center_horizontal"/>
+                    android:layout_gravity="center_horizontal"
+                    android:adjustViewBounds="true" />
 
                 <!-- Description -->
                 <TextView
                     android:id="@+id/readPostDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Description placeholder"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    tools:text="Description placeholder" />
 
                 <!-- Divider -->
                 <View
@@ -70,7 +71,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="3dp"
-                        android:text="0" />
+                        tools:text="0" />
 
                     <ImageView
                         android:id="@+id/activity_post_like_button"
@@ -87,7 +88,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="3dp"
-                        android:text="0" />
+                        tools:text="0" />
 
                     <ImageView
                         android:id="@+id/activity_post_dislike_button"
@@ -109,8 +110,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
-                        android:text="Author placeholder"
-                        android:textStyle="italic" />
+                        android:textStyle="italic"
+                        tools:text="Author" />
 
                     <!-- Date -->
                     <TextView
@@ -118,7 +119,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
-                        android:text="Date placeholder" />
+                        tools:text="Date" />
 
                     <!-- Location -->
                     <TextView
@@ -126,7 +127,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
-                        android:text="Location placeholder" />
+                        tools:text="Location" />
 
                 </LinearLayout>
 
@@ -135,7 +136,7 @@
                     android:id="@+id/readPostTags"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Tags placeholder" />
+                    tools:text="Tags" />
 
 
                 <!-- COMMENTS: -->
@@ -176,13 +177,13 @@
                         android:id="@+id/activity_post_comment_new_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Title"/>
+                        android:hint="Title" />
 
                     <EditText
                         android:id="@+id/activity_post_comment_new_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Description"/>
+                        android:hint="Description" />
 
                     <Button
                         android:layout_width="wrap_content"

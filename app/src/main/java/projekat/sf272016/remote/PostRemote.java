@@ -1,6 +1,7 @@
 package projekat.sf272016.remote;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import projekat.sf272016.model.Post;
 import retrofit2.Call;
@@ -15,6 +16,14 @@ public interface PostRemote {
     // GET ALL
     @GET(Remote.APP_PATH + "/posts")
     Call<ArrayList<Post>> getAllPosts();
+
+    // GET ALL OrderByDate
+    @POST(Remote.APP_PATH + "/posts/orderByDate")
+    Call<ArrayList<Post>> getAllPostsOrderByDate(@Body Date date);
+
+    // GET ALL OrderByDate
+    @POST(Remote.APP_PATH + "/posts/orderByLikes")
+    Call<ArrayList<Post>> getAllPostsOrderByLikes(@Body Date date);
 
     // GET BY ID
     @GET(Remote.APP_PATH + "/posts/{id}")

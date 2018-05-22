@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +59,9 @@ public class PostListAdapter extends BaseAdapter {
         ImageView iconView = (ImageView) view.findViewById(R.id.activity_posts_post_item_image);
         TextView titleView = (TextView) view.findViewById(R.id.activity_posts_post_item_title);
         TextView descriptionView = (TextView) view.findViewById(R.id.activity_posts_post_item_description);
+        TextView likesView = (TextView) view.findViewById(R.id.activity_posts_post_item_likes);
+        TextView dislikesView = (TextView) view.findViewById(R.id.activity_posts_post_item_dislikes);
+        TextView dateView = (TextView) view.findViewById(R.id.activity_posts_post_item_date);
 
         Post post = posts.get(position);
 
@@ -69,6 +73,9 @@ public class PostListAdapter extends BaseAdapter {
         }
         titleView.setText(post.getTitle());
         descriptionView.setText(post.getDescription());
+        likesView.setText(((Integer)post.getLikes()).toString());
+        dislikesView.setText(((Integer)post.getDislikes()).toString());
+        dateView.setText(new SimpleDateFormat("dd.MM.yyyy.").format(post.getDate()));
 
         view.setOnClickListener(new PostsClickListener());
         view.setTag(post.getId());

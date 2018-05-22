@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -29,8 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
-            android:text="datum"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            tools:text="datum" />
 
     </LinearLayout>
 
@@ -49,8 +50,8 @@
                 android:id="@+id/activity_post_comment_item_owner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Owner"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                tools:text="Owner" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -62,9 +63,9 @@
                 android:id="@+id/activity_post_comment_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Title"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="Title" />
 
         </LinearLayout>
 
@@ -73,7 +74,7 @@
             android:id="@+id/activity_post_comment_item_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Description" />
+            tools:text="Description" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -88,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="3dp"
-                android:text="0" />
+                tools:text="0" />
 
             <ImageView
                 android:id="@+id/activity_post_comment_item_like_button"
@@ -105,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="3dp"
-                android:text="0" />
+                tools:text="0" />
 
             <ImageView
                 android:id="@+id/activity_post_comment_item_dislike_button"

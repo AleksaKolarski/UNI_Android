@@ -67,8 +67,13 @@ public class PostsActivity extends AppCompatActivity{
         }
         consultPreferences();
 
-        // Povlacenje JSON-a i deserijalizacija u objekte
-        Call<ArrayList<Post>> call = Remote.postRemote.getAllPosts();
+        Call<ArrayList<Post>> call;
+        if(preferenceSort.equals("Datum")){
+            call = Remote.postRemote.getAllPostsOrderByDate(preferenceDate);
+        }
+        else{
+            call = Remote.postRemote.getAllPostsOrderByLikes(preferenceDate);
+        }
         call.enqueue(new Callback<ArrayList<Post>>(){
             @Override
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response){

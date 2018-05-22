@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- "Mark Favorite", should appear as action button if possible -->
@@ -8,11 +7,12 @@
         android:id="@+id/toolbar_action_new"
         android:icon="@drawable/ic_add_black_24dp"
         android:title="Create new post"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
     <!-- Settings, should always be in the overflow -->
-    <item android:id="@+id/toolbar_action_sync"
+    <item
+        android:id="@+id/toolbar_action_sync"
         android:icon="@drawable/ic_sync_black_24dp"
         android:title="sync"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 </menu>

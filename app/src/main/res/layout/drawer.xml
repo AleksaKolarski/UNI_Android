@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:id="@+id/drawerPane"
     android:layout_width="280dp"
@@ -37,16 +38,16 @@
                 android:id="@+id/drawerProfileName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="User"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="User" />
 
             <TextView
                 android:id="@+id/drawerProfileUsername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="user"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:text="user" />
 
         </LinearLayout>
 

@@ -1,39 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <PreferenceCategory
-        android:title="Podesavanja">
+    <PreferenceCategory android:title="Podesavanja">
 
         <!-- Filter datum -->
         <projekat.sf272016.misc.DatePreference
+            android:defaultValue="1991.01.01"
             android:key="keyPreferenceDate"
-            android:title="Podesavanje datuma objava"
-            android:defaultValue="1991.01.01"/>
+            android:title="Podesavanje datuma objava" />
 
         <!-- Sortiranje postova -->
         <ListPreference
+            android:defaultValue="Datum"
             android:dialogTitle="@string/preferenceSortPost"
             android:entries="@array/preferenceSort"
             android:entryValues="@array/preferenceSort"
             android:key="keyPreferenceSortPost"
-            android:title="@string/preferenceSortPost"
             android:summary="%s"
-            android:defaultValue="Datum"/>
+            android:title="@string/preferenceSortPost" />
 
         <!-- Sortiranje komentara -->
         <ListPreference
+            android:defaultValue="Datum"
             android:dialogTitle="@string/preferenceSortComment"
             android:entries="@array/preferenceSort"
             android:entryValues="@array/preferenceSort"
             android:key="keyPreferenceSortComment"
-            android:title="@string/preferenceSortComment"
             android:summary="%s"
-            android:defaultValue="Datum"/>
+            android:title="@string/preferenceSortComment" />
 
     </PreferenceCategory>
 
