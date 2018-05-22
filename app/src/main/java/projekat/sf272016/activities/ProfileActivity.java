@@ -99,7 +99,12 @@ public class ProfileActivity extends AppCompatActivity {
                 }
                 ((TextView) findViewById(R.id.profileActivityName)).setText(user.getName());
                 ((TextView) findViewById(R.id.profileActivityUsername)).setText(user.getUsername());
-                ((ImageView) findViewById(R.id.profileActivityImage)).setImageBitmap(user.getPhoto());
+                if(user.getPhoto() != null){
+                    ((ImageView) findViewById(R.id.profileActivityImage)).setImageBitmap(user.getPhoto());
+                }
+                else{
+                    ((ImageView) findViewById(R.id.profileActivityImage)).setImageResource(R.drawable.ic_person_black_24dp);
+                }
             }
             @Override
             public void onFailure(Call<User> call, Throwable t) {
@@ -163,6 +168,43 @@ public class ProfileActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Toast.makeText(this, "Could not load image.", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profile_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.toolbar_action_delete:
+                Call<Void> call = Remote.userRemote.deleteUser(PreferenceManager.getDefaultSharedPreferences(this).getString("loggedInUserUsername", ""));
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if(response.code() == 200){
+                            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ProfileActivity.this);
+                            SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+                            sharedPreferencesEditor.remove("loggedInUserUsername");
+                            sharedPreferencesEditor.remove("loggedInUserName");
+                            sharedPreferencesEditor.commit();
+
+                            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            ProfileActivity.this.finish();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

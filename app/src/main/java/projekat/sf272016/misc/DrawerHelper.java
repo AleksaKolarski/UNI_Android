@@ -55,6 +55,7 @@ public class DrawerHelper {
         String name = sharedPreferences.getString("loggedInUserName", "");
         ((TextView)activity.findViewById(R.id.drawerProfileName)).setText(name);
         ((TextView)activity.findViewById(R.id.drawerProfileUsername)).setText(username);
+        // TODO ucitati sliku korisnika
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {

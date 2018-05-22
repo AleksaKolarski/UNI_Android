@@ -8,6 +8,7 @@ import okhttp3.ResponseBody;
 import projekat.sf272016.model.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -39,4 +40,8 @@ public interface UserRemote {
     // CREATE
     @POST(Remote.APP_PATH + "/users")
     Call<User> createUser(@Body User user);
+
+    // DELETE
+    @DELETE(Remote.APP_PATH + "/users/{username}")
+    Call<Void> deleteUser(@Path("username") String username);
 }
