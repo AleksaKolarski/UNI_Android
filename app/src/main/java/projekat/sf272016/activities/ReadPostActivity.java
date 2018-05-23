@@ -38,8 +38,9 @@ public class ReadPostActivity extends AppCompatActivity {
     ToolbarHelper toolbarHelper;
     Integer postId;
 
-    String loggedInUser;
     String postOwner;
+
+    Post post;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,11 @@ public class ReadPostActivity extends AppCompatActivity {
         /* Toolbar */
         toolbarHelper = new ToolbarHelper(this);
         toolbarHelper.initialize("Post");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         // Ucitavanje posta
         postId = (Integer) getIntent().getIntExtra("postId", 0);
@@ -64,7 +70,7 @@ public class ReadPostActivity extends AppCompatActivity {
         call.enqueue(new Callback<Post>() {
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
-                final Post post = response.body();
+                post = response.body();
                 if (post != null) {
                     postOwner = post.getAuthor().getUsername();
                     invalidateOptionsMenu();
@@ -141,8 +147,14 @@ public class ReadPostActivity extends AppCompatActivity {
             }
         });
 
-
-        Call<ArrayList<Comment>> call2 = Remote.commentRemote.getCommentsByPostId(postId);
+        String preferenceSort = PreferenceManager.getDefaultSharedPreferences(this).getString("keyPreferenceSortComment", "Datum");
+        Call<ArrayList<Comment>> call2;
+        if(preferenceSort.equals("Datum")){
+            call2 = Remote.commentRemote.getCommentsOrderByDate(postId);
+        }
+        else{
+            call2 = Remote.commentRemote.getCommentsOrderByLikes(postId);
+        }
         call2.enqueue(new Callback<ArrayList<Comment>>() {
             @Override
             public void onResponse(Call<ArrayList<Comment>> call, Response<ArrayList<Comment>> response) {
@@ -251,6 +263,7 @@ public class ReadPostActivity extends AppCompatActivity {
                             startActivity(intent);
                         }
                     }
+
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         t.printStackTrace();

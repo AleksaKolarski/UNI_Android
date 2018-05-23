@@ -15,6 +15,14 @@ public interface CommentRemote {
     @GET(Remote.APP_PATH + "/posts/{postId}/comments")
     Call<ArrayList<Comment>> getCommentsByPostId(@Path("postId") int postId);
 
+    // GET ALL BY POST_ID OrderBy Date
+    @GET(Remote.APP_PATH + "/posts/{postId}/comments/orderByDate")
+    Call<ArrayList<Comment>> getCommentsOrderByDate(@Path("postId") int postId);
+
+    // GET ALL BY POST_ID OrderBy Likes
+    @GET(Remote.APP_PATH + "/posts/{postId}/comments/orderByLikes")
+    Call<ArrayList<Comment>> getCommentsOrderByLikes(@Path("postId") int postId);
+
     // CREATE
     @POST(Remote.APP_PATH + "/comments")
     Call<Comment> createComment(@Body Comment comment);
