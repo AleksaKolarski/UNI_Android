@@ -40,6 +40,7 @@ public class Remote {
     public static PostRemote postRemote;
     public static UserRemote userRemote;
     public static CommentRemote commentRemote;
+    public static TagRemote tagRemote;
 
     public static boolean init(String hostAddress){
         retrofit = new Retrofit.Builder()
@@ -56,6 +57,7 @@ public class Remote {
             postRemote = retrofit.create(PostRemote.class);
             userRemote = retrofit.create(UserRemote.class);
             commentRemote = retrofit.create(CommentRemote.class);
+            tagRemote = retrofit.create(TagRemote.class);
             return true;
         }
     }

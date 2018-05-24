@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import projekat.sf272016.R;
 import projekat.sf272016.adapters.CommentAdapter;
@@ -25,6 +26,7 @@ import projekat.sf272016.misc.IDrawerClickHandler;
 import projekat.sf272016.misc.ToolbarHelper;
 import projekat.sf272016.model.Comment;
 import projekat.sf272016.model.Post;
+import projekat.sf272016.model.Tag;
 import projekat.sf272016.model.User;
 import projekat.sf272016.model.misc.DrawerListItem;
 import projekat.sf272016.remote.Remote;
@@ -63,11 +65,10 @@ public class ReadPostActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // Ucitavanje posta
+        //<editor-fold desc="Ucitavanje posta">
         postId = (Integer) getIntent().getIntExtra("postId", 0);
-
-        Call<Post> call = Remote.postRemote.getPostById(postId);
-        call.enqueue(new Callback<Post>() {
+        Call<Post> call1 = Remote.postRemote.getPostById(postId);
+        call1.enqueue(new Callback<Post>() {
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
                 post = response.body();
@@ -146,7 +147,9 @@ public class ReadPostActivity extends AppCompatActivity {
                 Toast.makeText(ReadPostActivity.this, "Error loading post", Toast.LENGTH_SHORT).show();
             }
         });
+        //</editor-fold>
 
+        //<editor-fold desc="Ucitavanje komentara">
         String preferenceSort = PreferenceManager.getDefaultSharedPreferences(this).getString("keyPreferenceSortComment", "Datum");
         Call<ArrayList<Comment>> call2;
         if(preferenceSort.equals("Datum")){
@@ -165,12 +168,33 @@ public class ReadPostActivity extends AppCompatActivity {
                     commentListView.setAdapter(commentAdapter);
                 }
             }
-
             @Override
             public void onFailure(Call<ArrayList<Comment>> call, Throwable t) {
                 t.printStackTrace();
             }
         });
+        //</editor-fold>
+
+        //<editor-fold desc="Ucitavanje tagova">
+        Call<ArrayList<Tag>> call3 = Remote.tagRemote.getByPostId(postId);
+        call3.enqueue(new Callback<ArrayList<Tag>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Tag>> call, Response<ArrayList<Tag>> response) {
+                if(response.code() == 200){
+                    TextView tagView = ((TextView)findViewById(R.id.readPostTags));
+                    if (response.body() != null) {
+                        for(Tag tag: response.body()){
+                            tagView.append(" " + tag.getName());
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<Tag>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+        //</editor-fold>
     }
 
     public void btnNewComment(View view) {
@@ -199,7 +223,6 @@ public class ReadPostActivity extends AppCompatActivity {
                             recreate();
                         }
                     }
-
                     @Override
                     public void onFailure(Call<Comment> call, Throwable t) {
                         t.printStackTrace();
