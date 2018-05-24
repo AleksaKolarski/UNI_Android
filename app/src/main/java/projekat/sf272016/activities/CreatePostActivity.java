@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,12 +23,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import projekat.sf272016.R;
+import projekat.sf272016.adapters.PostListAdapter;
+import projekat.sf272016.adapters.TagAdapter;
 import projekat.sf272016.misc.DrawerHelper;
 import projekat.sf272016.misc.IDrawerClickHandler;
 import projekat.sf272016.misc.ToolbarHelper;
 import projekat.sf272016.model.Post;
+import projekat.sf272016.model.Tag;
 import projekat.sf272016.model.User;
 import projekat.sf272016.model.misc.DrawerListItem;
+import projekat.sf272016.model.misc.TagSelected;
 import projekat.sf272016.remote.Remote;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,6 +60,37 @@ public class CreatePostActivity extends AppCompatActivity {
         toolbarHelper.initialize("Create new post");
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        Call<ArrayList<Tag>> call = Remote.tagRemote.getAllTags();
+        call.enqueue(new Callback<ArrayList<Tag>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Tag>> call, Response<ArrayList<Tag>> response) {
+                if(response.code() == 200){
+                    if(response.body() != null){
+                        ArrayList<Tag> tags = response.body();
+                        ArrayList<TagSelected> tagsSelected = new ArrayList<>();
+                        for(Tag tag: tags){
+                            TagSelected tagSelected = new TagSelected();
+                            tagSelected.setTag(tag);
+                            tagSelected.setSelected(false);
+                            tagsSelected.add(tagSelected);
+                        }
+                        TagAdapter tagAdapter = new TagAdapter(CreatePostActivity.this, tagsSelected);
+                        ListView tagListView = (ListView) findViewById(R.id.createPostActivityTags);
+                        tagListView.setAdapter(tagAdapter);
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<Tag>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
     public void btnCreate(View view) {
 
         if(((EditText) findViewById(R.id.createPostActivityTitle)).getText().toString().length() < 3){
@@ -75,6 +111,18 @@ public class CreatePostActivity extends AppCompatActivity {
         if(drawable != null){
             post.setPhoto(drawable.getBitmap());
         }
+
+        ListView tagListView = (ListView) findViewById(R.id.createPostActivityTags);
+        TagAdapter tagAdapter = (TagAdapter) tagListView.getAdapter();
+
+        ArrayList<Tag> tagList = new ArrayList<>();
+        for(int i = 0; i < tagAdapter.getCount(); i++){
+            TagSelected tagSelected = (TagSelected) tagAdapter.getItem(i);
+            if(tagSelected.isSelected()){
+                tagList.add(tagSelected.getTag());
+            }
+        }
+        post.setTags(tagList);
 
         Call<Post> call = Remote.postRemote.createPost(post);
         call.enqueue(new Callback<Post>() {

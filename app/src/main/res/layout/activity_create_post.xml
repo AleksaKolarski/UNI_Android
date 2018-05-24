@@ -14,72 +14,81 @@
         android:layout_height="match_parent">
 
         <!-- Main content -->
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:text="Create new post"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/createPostActivityTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Title"
-                android:maxLength="255" />
-
-            <EditText
-                android:id="@+id/createPostActivityDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Description"
-                android:maxLength="255" />
-
-            <!-- Slika -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="end"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:padding="10dp">
 
-                <ImageView
-                    android:id="@+id/createPostActivityPhoto"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:text="Create new post"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/createPostActivityTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Title"
+                    android:maxLength="255" />
+
+                <EditText
+                    android:id="@+id/createPostActivityDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Description"
+                    android:maxLength="255" />
+
+                <!-- Slika -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/createPostActivityPhoto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp" />
+
+                    <Button
+                        android:id="@+id/createPostActivityPhotoButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center_vertical"
+                        android:onClick="btnPhoto"
+                        android:text="Postavi sliku"
+                        android:textAllCaps="false" />
+
+                </LinearLayout>
+
+                <ListView
+                    android:id="@+id/createPostActivityTags"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp">
+
+                </ListView>
 
                 <Button
-                    android:id="@+id/createPostActivityPhotoButton"
                     android:layout_width="wrap_content"
                     android:layout_height="60dp"
-                    android:layout_gravity="center_vertical"
-                    android:onClick="btnPhoto"
-                    android:text="Odaberi sliku"
+                    android:layout_gravity="right"
+                    android:onClick="btnCreate"
+                    android:text="Create"
                     android:textAllCaps="false" />
 
+
+
             </LinearLayout>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Tags" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:layout_gravity="right"
-                android:onClick="btnCreate"
-                android:text="Create"
-                android:textAllCaps="false" />
-
-        </LinearLayout>
+        </ScrollView>
 
         <!-- Drawer -->
         <include layout="@layout/drawer" />
