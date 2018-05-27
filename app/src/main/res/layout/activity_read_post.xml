@@ -121,15 +121,16 @@
                         android:layout_marginEnd="10dp"
                         tools:text="Date" />
 
-                    <!-- Location -->
-                    <TextView
-                        android:id="@+id/readPostLocation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
-                        tools:text="Location" />
-
                 </LinearLayout>
+
+                <!-- Location -->
+                <TextView
+                    android:id="@+id/readPostLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:text="Location: "
+                    tools:text="Location" />
 
                 <!-- Tags -->
                 <TextView

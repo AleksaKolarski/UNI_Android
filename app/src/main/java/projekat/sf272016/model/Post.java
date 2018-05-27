@@ -36,7 +36,14 @@ public class Post {
     @Expose
     private Date date;
 
-    private Location location;
+    @SerializedName("latitude")
+    @Expose
+    private double latitude;
+
+    @SerializedName("longitude")
+    @Expose
+    private double longitude;
+
     private List<Tag> tags;
     private List<Comment> comments;
 
@@ -48,17 +55,18 @@ public class Post {
     @Expose
     private int dislikes;
 
-    public Post(){
+    public Post() {
 
     }
 
-    public Post(String title, String description, Bitmap photo, User user, Date date, Location location, List<Tag> tags, List<Comment> comments, int likes, int dislikes) {
+    public Post(String title, String description, Bitmap photo, User user, Date date, double latitude, double longitude, List<Tag> tags, List<Comment> comments, int likes, int dislikes) {
         this.title = title;
         this.description = description;
         this.photo = photo;
         this.user = user;
         this.date = date;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.tags = tags;
         this.comments = comments;
         this.likes = likes;
@@ -113,12 +121,20 @@ public class Post {
         this.date = date;
     }
 
-    public Location getLocation() {
-        return location;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public List<Tag> getTags() {

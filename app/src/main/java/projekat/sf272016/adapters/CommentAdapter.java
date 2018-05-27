@@ -2,6 +2,7 @@ package projekat.sf272016.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,32 @@ public class CommentAdapter extends BaseAdapter {
         ((TextView)view.findViewById(R.id.activity_post_comment_item_description)).setText(comment.getDescription());
         ((TextView)view.findViewById(R.id.activity_post_comment_item_likes)).setText(((Integer)comment.getLikes()).toString());
         ((TextView)view.findViewById(R.id.activity_post_comment_item_dislikes)).setText(((Integer)comment.getDislikes()).toString());
+
+
+        ImageView deleteButton = (ImageView)view.findViewById(R.id.activity_post_comment_item_delete);
+        String loggedInUsername = PreferenceManager.getDefaultSharedPreferences(context).getString("loggedInUserUsername", "");
+        if(loggedInUsername.equals(comment.getAuthor().getUsername())){
+            deleteButton.setVisibility(View.VISIBLE);
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Call<Void> call = Remote.commentRemote.deleteComment(comment.getId());
+                    call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            ((Activity)context).recreate();
+                        }
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
+                }
+            });
+        }
+        else{
+            deleteButton.setVisibility(View.INVISIBLE);
+        }
 
         final View view2 = view;
         ((ImageView)view.findViewById(R.id.activity_post_comment_item_like_button)).setOnClickListener(new View.OnClickListener() {

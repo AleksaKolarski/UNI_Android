@@ -79,7 +79,6 @@ public class ReadPostActivity extends AppCompatActivity {
                     TextView readPostTitle = (TextView) findViewById(R.id.readPostTitle);
                     TextView readPostDescription = (TextView) findViewById(R.id.readPostDescription);
                     ImageView readPostImage = (ImageView) findViewById(R.id.readPostImage);
-                    TextView readPostTags = (TextView) findViewById(R.id.readPostTags);
                     TextView readPostAuthor = (TextView) findViewById(R.id.readPostAuthor);
                     TextView readPostDate = (TextView) findViewById(R.id.readPostDate);
                     TextView readPostLocation = (TextView) findViewById(R.id.readPostLocation);
@@ -98,6 +97,10 @@ public class ReadPostActivity extends AppCompatActivity {
                     readPostImage.setImageBitmap(post.getPhoto());
                     readPostAuthor.setText(post.getAuthor().getUsername());
                     readPostDate.setText(new SimpleDateFormat("dd.MM.yyyy.").format(post.getDate()));
+
+                    String latitude = String.valueOf(post.getLatitude());
+                    String longitude = String.valueOf(post.getLongitude());
+                    readPostLocation.setText("Location: " + latitude.substring(0, Math.min(5, latitude.length())) + " " + longitude.substring(0, Math.min(5, longitude.length())));
                     readPostLikes.setText(((Integer) post.getLikes()).toString());
                     readPostDislikes.setText(((Integer) post.getDislikes()).toString());
 
@@ -112,7 +115,6 @@ public class ReadPostActivity extends AppCompatActivity {
                                     if (response.code() == 200 && response.body() != null)
                                         readPostLikes.setText(response.body().toString());
                                 }
-
                                 @Override
                                 public void onFailure(Call<Integer> call, Throwable t) {
                                     t.printStackTrace();
@@ -131,7 +133,6 @@ public class ReadPostActivity extends AppCompatActivity {
                                     if (response.code() == 200 && response.body() != null)
                                         readPostDislikes.setText(response.body().toString());
                                 }
-
                                 @Override
                                 public void onFailure(Call<Integer> call, Throwable t) {
                                     t.printStackTrace();
@@ -183,6 +184,7 @@ public class ReadPostActivity extends AppCompatActivity {
                 if(response.code() == 200){
                     TextView tagView = ((TextView)findViewById(R.id.readPostTags));
                     if (response.body() != null) {
+                        tagView.setText("Tags:");
                         for(Tag tag: response.body()){
                             tagView.append(" " + tag.getName());
                         }
@@ -197,6 +199,7 @@ public class ReadPostActivity extends AppCompatActivity {
         //</editor-fold>
     }
 
+    // Postavljanje novog komentara
     public void btnNewComment(View view) {
         String commentTitle = ((EditText) findViewById(R.id.activity_post_comment_new_title)).getText().toString();
         String commentDescription = ((EditText) findViewById(R.id.activity_post_comment_new_description)).getText().toString();

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import projekat.sf272016.model.Comment;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -34,4 +35,7 @@ public interface CommentRemote {
     // DISLIKE
     @POST(Remote.APP_PATH + "/comments/{id}/dislike")
     Call<Integer> dislikeComment(@Path("id") int id);
+
+    @DELETE(Remote.APP_PATH + "/comments/{id}")
+    Call<Void> deleteComment(@Path("id") int id);
 }
